@@ -1,0 +1,558 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Vehicles - JUNKIFI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<link rel="stylesheet" href="checkoffer.css">
+	
+	
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+
+
+	
+	
+	
+	
+</head>
+<body>
+<!-- Header Placeholder -->
+<div id="header-placeholder"></div>
+
+<!-- Firebase SDKs -->
+
+<!-- Main Content -->
+<div class="container main-content">
+    <!-- Content for authenticated users -->
+    <div id="authenticated-content" style="display: none;">
+        <h1 class="page-title">Browse Available Vehicles</h1>
+        
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <h2 class="filter-title">Filter Vehicles</h2>
+            <div class="filter-form">
+            
+                <div class="form-group">
+                    <label for="year-filter">Year</label>
+                    <select id="year-filter">
+                        <option value="">Select Year</option>
+                        <!-- Years will be populated by JavaScript -->
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="make-filter">Make</label>
+                    <select id="make-filter" disabled>
+                        <option value="">Select Make</option>
+                        <!-- Makes will be populated based on year selection -->
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="model-filter">Model</label>
+                    <select id="model-filter" disabled>
+                        <option value="">Select Model</option>
+                        <!-- Models will be populated based on make selection -->
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="location-filter">Location</label>
+                    <input type="text" id="location-filter" placeholder="ZIP Code">
+                </div>
+                
+                <button class="filter-btn">Apply Filters</button>
+            </div>
+        </div>
+        
+        <!-- All Vehicles Section -->
+        <h2 class="saved-vehicles-header">All Available Vehicles</h2>
+        <div class="vehicle-listings" id="allVehicles">
+            <!-- All vehicles will be displayed here dynamically -->
+        </div>
+   
+        <!-- Saved Vehicles Section -->
+        <div id="savedVehiclesSection">
+            <h2 class="saved-vehicles-header">Your Saved Vehicles</h2>
+            <div class="vehicle-listings" id="savedVehicles">
+                <!-- Saved vehicles will be displayed here dynamically -->
+            </div>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="pagination">
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn">3</button>
+            <button class="pagination-btn">Next</button>
+        </div>
+    </div>
+    
+    <!-- Content for unauthenticated users -->
+    <div id="unauthenticated-content" style="display: none;">
+        <div class="login-prompt">
+            <i class="fas fa-lock"></i>
+            <h2>Authentication Required</h2>
+            <p>You need to be logged in to browse our vehicle inventory.</p>
+            <a href="signin.html" class="login-btn">Sign In</a>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div id="footer-placeholder"></div>
+
+<script>
+// Load header and footer
+fetch("header.html")
+  .then(res => res.text())
+  .then(data => {
+    const headerPlaceholder = document.getElementById("header-placeholder");
+    headerPlaceholder.innerHTML = data;
+
+    // Run any <script> tags from header.html
+    const scripts = headerPlaceholder.querySelectorAll("script");
+    scripts.forEach(oldScript => {
+      const newScript = document.createElement("script");
+      if (oldScript.src) {
+        newScript.src = oldScript.src;
+      } else {
+        newScript.textContent = oldScript.textContent;
+      }
+      document.body.appendChild(newScript);
+    });
+    
+    // Wait for AuthManager to be available
+    const checkAuthManager = setInterval(() => {
+	console.log('Browse page loaded');
+	console.log('AuthManager defined:', typeof AuthManager !== 'undefined');
+      if (typeof AuthManager !== 'undefined') {
+	  console.log('AuthManager.auth defined:', typeof AuthManager.auth !== 'undefined');
+  console.log('AuthManager.signOut defined:', typeof AuthManager.signOut === 'function');
+        clearInterval(checkAuthManager);
+        
+        // Add this after your auth check in the page load
+AuthManager.checkAuthState().then(isLoggedIn => {
+    updateUIForAuthState(isLoggedIn);
+    
+    // Load vehicles only if user is authenticated
+    if (isLoggedIn) {
+        const userEmail = localStorage.getItem('userEmail');
+        if (userEmail === 'admin@gmail.com') {
+            console.log("Admin user detected - enabling delete functionality");
+        }
+        loadVehiclesFromFirebase();
+    }
+}).catch(error => {
+    console.error("Error checking auth state:", error);
+    updateUIForAuthState(false);
+});
+      }
+    }, 100);
+  })
+  .catch(error => console.error("Error loading header:", error));
+
+// Load footer
+fetch("footer.html")
+  .then(response => response.text())
+  .then(data => {
+    document.getElementById("footer-placeholder").innerHTML = data;
+  });
+
+// Function to check authentication status and update UI accordingly
+function updateUIForAuthState(isLoggedIn) {
+    const authenticatedContent = document.getElementById('authenticated-content');
+    const unauthenticatedContent = document.getElementById('unauthenticated-content');
+    
+    if (isLoggedIn) {
+        // User is logged in - show vehicle browsing content
+        if (authenticatedContent) {
+            authenticatedContent.style.display = 'block';
+        }
+        if (unauthenticatedContent) {
+            unauthenticatedContent.style.display = 'none';
+        }
+    } else {
+        // User is not logged in - show login prompt
+        if (authenticatedContent) {
+            authenticatedContent.style.display = 'none';
+        }
+        if (unauthenticatedContent) {
+            unauthenticatedContent.style.display = 'block';
+        }
+    }
+}
+
+// Function to load vehicles from Firebase
+function loadVehiclesFromFirebase() {
+    const allVehiclesContainer = document.getElementById('allVehicles');
+    const savedVehiclesContainer = document.getElementById('savedVehicles');
+    
+    // Show loading state
+    if (allVehiclesContainer) {
+        allVehiclesContainer.innerHTML = '<div class="loading">Loading vehicles...</div>';
+    }
+    if (savedVehiclesContainer) {
+        savedVehiclesContainer.innerHTML = '<div class="loading">Loading your saved vehicles...</div>';
+    }
+    
+// Check if Firebase is initialized through AuthManager
+if (AuthManager.isInitialized && AuthManager.db) {
+    // Get all vehicles from Firebase, ordered by listing date
+    AuthManager.db.collection("vehicleSubmissions").orderBy("submissionDate", "desc").get()
+
+        .then((querySnapshot) => {
+            const vehicles = [];
+            querySnapshot.forEach((doc) => {
+                vehicles.push({ id: doc.id, ...doc.data() });
+            });
+            
+            // Store vehicles in localStorage as fallback
+            localStorage.setItem('salvageHubAllVehicles', JSON.stringify(vehicles));
+            
+            // Display all vehicles
+            if (allVehiclesContainer) {
+                displayVehicles(vehicles, allVehiclesContainer);
+            }
+            
+            // Filter and display only user's saved vehicles
+            const userEmail = localStorage.getItem('userEmail');
+            if (userEmail && savedVehiclesContainer) {
+                const userVehicles = vehicles.filter(vehicle => 
+                    vehicle.sellerEmail === userEmail
+                );
+                displayVehicles(userVehicles, savedVehiclesContainer);
+            }
+        })
+        .catch((error) => {
+            console.error("Error getting vehicles: ", error);
+            // Fallback to localStorage
+            loadVehiclesFromLocalStorage();
+        });
+} else {
+    console.error("Firebase is not initialized");
+    // Fallback to localStorage
+    loadVehiclesFromLocalStorage();
+}
+}
+// Global variable to store the vehicle ID to be deleted
+let vehicleToDelete = null;
+
+function setupDeleteConfirmation() {
+    const modal = document.getElementById('confirmationModal');
+    const confirmBtn = document.getElementById('confirmDeleteBtn');
+    const cancelBtn = document.getElementById('cancelDeleteBtn');
+    console.log("Modal elements:", {modal, confirmBtn, cancelBtn});
+    // Add null checks
+    if (!modal || !confirmBtn || !cancelBtn) {
+        console.error("Modal elements not found");
+        return;
+    }
+    
+    confirmBtn.addEventListener('click', function() {
+        if (vehicleToDelete) {
+            deleteVehicle(vehicleToDelete);
+        }
+        modal.style.display = 'none';
+    });
+    
+    cancelBtn.addEventListener('click', function() {
+        modal.style.display = 'none';
+        vehicleToDelete = null;
+    });
+    
+    // Close modal if clicked outside
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+            vehicleToDelete = null;
+        }
+    });
+}
+
+// Function to show delete confirmation
+function showDeleteConfirmation(vehicleId) {
+    const modal = document.getElementById('confirmationModal');
+    vehicleToDelete = vehicleId;
+    modal.style.display = 'flex';
+}
+
+// Function to delete vehicle from Firebase
+function deleteVehicle(vehicleId) {
+console.log(`Attempting to delete vehicle: ${vehicleId}`);
+    if (!AuthManager.isInitialized || !AuthManager.db) {
+        console.error("Firebase is not initialized");
+        return;
+    }
+    
+    // Get the current user
+    const user = AuthManager.auth.currentUser;
+    if (!user) {
+        alert("You must be logged in to delete vehicles.");
+        return;
+    }
+    
+    // Delete from Firebase
+    AuthManager.db.collection("vehicleSubmissions").doc(vehicleId).delete()
+        .then(() => {
+            console.log("Vehicle successfully deleted from Firebase");
+            
+            // Also remove from localStorage cache
+            const allVehicles = JSON.parse(localStorage.getItem('salvageHubAllVehicles')) || [];
+            const updatedVehicles = allVehicles.filter(vehicle => vehicle.id !== vehicleId);
+            localStorage.setItem('salvageHubAllVehicles', JSON.stringify(updatedVehicles));
+            
+            // Remove from UI - use a more specific selector
+const vehicleElement = document.querySelector(`.delete-btn[data-id="${vehicleId}"]`)?.closest('.vehicle-card');
+            if (vehicleElement) {
+                vehicleElement.remove();
+            }
+            
+            // Show success message
+            alert("Vehicle listing deleted successfully.");
+        })
+        .catch((error) => {
+            console.error("Error removing vehicle: ", error);
+            alert("Error deleting vehicle. Please try again.");
+        });
+}
+
+// Function to attach delete event listeners
+function attachDeleteListeners() {
+    const deleteButtons = document.querySelectorAll('.delete-btn');
+    console.log(`Found ${deleteButtons.length} delete buttons`);
+    
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const vehicleId = this.getAttribute('data-id');
+            console.log(`Delete button clicked for vehicle ID: ${vehicleId}`);
+            showDeleteConfirmation(vehicleId);
+        });
+    });
+}
+
+
+
+
+
+// Fallback function to load vehicles from localStorage
+function loadVehiclesFromLocalStorage() {
+    const allVehicles = JSON.parse(localStorage.getItem('salvageHubAllVehicles')) || [];
+    const allVehiclesContainer = document.getElementById('allVehicles');
+    const savedVehiclesContainer = document.getElementById('savedVehicles');
+    
+    // Display all vehicles
+if (allVehiclesContainer) {
+    const filteredVehicles = allVehicles.filter(v => v.userEmail !== "anonymous@example.com");
+    displayVehicles(filteredVehicles, allVehiclesContainer);
+}
+
+
+    // Filter and display only user's saved vehicles
+    const userEmail = localStorage.getItem('userEmail');
+    if (userEmail && savedVehiclesContainer) {
+        const userVehicles = allVehicles.filter(vehicle => 
+            vehicle.sellerEmail === userEmail
+        );
+        displayVehicles(userVehicles, savedVehiclesContainer);
+    }
+}
+
+function displayVehicles(vehicles, container) {
+    if (!container) {
+        console.error("Container element not found");
+        return;
+    }
+
+    if (vehicles.length === 0) {
+        container.innerHTML = `
+            <div class="no-vehicles">
+                <i class="fas fa-car"></i>
+                <h3>No Vehicles Found</h3>
+                <p>No vehicles match your criteria.</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = '';
+
+   vehicles.forEach(vehicle => {
+        const vehicleCard = document.createElement('div');
+        vehicleCard.className = 'vehicle-card';
+
+        // Format timestamp -> only date (YYYY-MM-DD)
+        let formattedDate = '';
+        if (vehicle.timestamp) {
+            formattedDate = new Date(vehicle.timestamp).toISOString().split('T')[0];
+        }
+
+
+		
+
+        // Check if current user is admin
+        const userEmail = localStorage.getItem('userEmail');
+        const isAdmin = userEmail === 'admin@gmail.com';
+
+ // DEBUG: Add these console logs
+console.log("User email:", userEmail);
+console.log("Vehicle seller email:", vehicle.sellerEmail);
+console.log("Is admin:", isAdmin); // Changed from isOwner to isAdmin
+console.log("Vehicle ID:", vehicle.id);
+
+
+// Only show delete button if user is admin
+const deleteButtonHTML = isAdmin ? 
+    `<button class="delete-btn" data-id="${vehicle.id}" title="Delete this vehicle">
+        <i class="fas fa-trash"></i> Delete
+    </button>` : '';
+
+        // Damage & parts lists (already handled in your code)
+        let bodyDamageHTML = '';
+        if (vehicle.bodyDamage && vehicle.bodyDamage.length > 0) {
+            bodyDamageHTML = `
+              <div class="damage-col">
+                <h4>Body Damage</h4>
+                <ul>
+                  ${vehicle.bodyDamage.map(d => `<li>${d.description} (${d.part})</li>`).join('')}
+                </ul>
+              </div>
+            `;
+        }
+
+
+    let majorDamageHTML = '';
+    if (vehicle.majorDamage && vehicle.majorDamage.length > 0) {
+        majorDamageHTML = `
+          <div class="damage-col">
+           <h4>Major Damage</h4>
+
+            <ul>
+              ${vehicle.majorDamage.map(d => `<li>${d.description} (${d.part})</li>`).join('')}
+            </ul>
+          </div>
+        `;
+    }
+
+    let missingPartsHTML = '';
+    if (vehicle.missingParts && vehicle.missingParts.length > 0) {
+        missingPartsHTML = `
+          <div class="damage-col">
+            <h4>Missing Parts</h4>
+
+            <ul>
+              ${vehicle.missingParts.map(p => `<li>${p.description || p.part}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+    }
+
+vehicleCard.innerHTML = `
+<div class="vehicle-details">
+    <div class="vehicle-header">
+        <h2 class="vehicle-title">
+            ${vehicle.year} ${vehicle.make} ${vehicle.model} 
+            <span class="vehicle-id">(${vehicle.id})</span>
+        </h2>
+        <div class="vehicle-actions">
+            <span class="vehicle-date"><i class="fas fa-calendar-alt"></i> ${formattedDate}</span>
+            ${deleteButtonHTML}
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    <div class="vehicle-info">
+        ${vehicle.name ? `<span><i class="fas fa-user"></i> ${vehicle.name}</span>` : ''}
+        <span><i class="fas fa-id-card"></i> ${vehicle.location}</span>
+        <span><i class="fas fa-envelope"></i> ${vehicle.email || ''}</span>
+        <span><i class="fas fa-phone"></i> ${vehicle.contactNumber || ''}</span>
+    </div>
+
+    <p class="vehicle-specs">
+        <strong>Mileage:</strong> ${vehicle.mileage} 
+        <strong> | Title Status:</strong> ${vehicle.titleStatus} 
+        <strong> | Tire Condition:</strong> ${vehicle.tireCondition}
+    </p>
+
+    <p class="vehicle-specs">
+        <strong>Interior:</strong> ${vehicle.interiorCondition} 
+        <strong> | Engine:</strong> ${vehicle.engineCondition}
+    </p>
+
+    <div class="damage-row">
+        ${bodyDamageHTML}
+        ${majorDamageHTML}
+        ${missingPartsHTML}
+    </div>
+</div>
+`;
+
+    container.appendChild(vehicleCard);
+});
+
+// ADD THIS LINE:
+setTimeout(() => {
+    attachDeleteListeners();
+}, 100);
+}
+
+
+
+
+// Function to show vehicle details
+function showVehicleDetails(vehicle) {
+    // Create a modal or show details in an alert
+    alert(`Vehicle Details:
+Year: ${vehicle.year}
+Make: ${vehicle.make}
+Model: ${vehicle.model}
+VIN: ${vehicle.vin || 'Not provided'}
+Mileage: ${vehicle.mileage} miles
+Condition: ${vehicle.condition || 'Not specified'}
+Price: $${vehicle.price}
+Engine Condition: ${vehicle.engineCondition || 'Not specified'}
+Interior Condition: ${vehicle.interiorCondition || 'Not specified'}
+Tire Condition: ${vehicle.tireCondition || 'Not specified'}
+Listed by: ${vehicle.sellerEmail || 'Unknown'}`);
+}
+
+
+// Initialize delete functionality when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    setupDeleteConfirmation();
+});
+
+</script>
+
+<!-- Confirmation Modal -->
+<div id="confirmationModal" class="confirmation-modal">
+    <div class="modal-content">
+        <h3>Confirm Deletion</h3>
+        <p>Are you sure you want to delete this vehicle listing? This action cannot be undone.</p>
+        <div class="modal-buttons">
+            <button id="confirmDeleteBtn" class="confirm-btn">Yes, Delete</button>
+            <button id="cancelDeleteBtn" class="cancel-btn">Cancel</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+</html>

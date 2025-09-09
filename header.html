@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Header - JUNKIFI</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1a3a4a 0%, #2c6c8c 100%);
+      color: white;
+      padding: 20px 0;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+      color: white;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 25px;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #ffcc00;
+    }
+
+    .auth-buttons {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .sign-in {
+      background-color: #ffcc00;
+      color: #1a3a4a;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .sign-in:hover {
+      background-color: #ffd633;
+    }
+
+    .sign-up {
+      background-color: transparent;
+      color: white;
+      border: 1px solid white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .sign-up:hover {
+      background-color: white;
+      color: #1a3a4a;
+    }
+
+    /* User info container */
+    .user-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: 15px;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+      position: relative;
+    }
+
+    .user-container:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .user-icon {
+      font-size: 30px;
+      color: white;
+    }
+
+    .user-email {
+      color: white;
+      font-weight: 500;
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Logout dropdown */
+    .logout-container {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 8px;
+      display: none;
+      z-index: 1000;
+      background: white;
+      padding: 8px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    .logout-btn {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ff4e4e 100%);
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logout-btn i {
+      font-size: 16px;
+    }
+
+    .logout-btn:hover {
+      background: linear-gradient(135deg, #ff4e4e 0%, #e63e3e 100%);
+      box-shadow: 0 4px 10px rgba(255, 0, 0, 0.25);
+      transform: translateY(-2px);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <a href="index.html" class="logo">JUNKIFI</a>
+      <div class="nav-links">
+    <a href="checkoffer.html" id="checkoffer-link" style="display: none;">Check Offer</a>
+    <a href="browse.html" id="browse-link" style="display: none;">Browse Vehicles</a> <!-- Added ID -->
+    <a href="sell.html" id="sell-link" style="display: none;">Sell Vehicle</a>
+    <a href="dashboard.html" id="dashboard-link" style="display: none;">Dashboard</a>
+        </div>
+        <div class="auth-buttons">
+          <button class="sign-in" id="sign-in-btn" onclick="window.location.href='signin.html'">Sign In</button>
+        <!--  <button class="sign-up" id="sign-up-btn" onclick="window.location.href='signup.html'">Sign Up</button> -->
+          
+          <div class="user-container" id="user-container" style="display: none;">
+            <i class="fas fa-user-circle user-icon"></i>
+            <span class="user-email" id="user-email"></span>
+            <div class="logout-container" id="logout-container">
+              <button class="logout-btn" id="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Log-out
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+  <script src="auth-manager.js"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check authentication state when DOM is loaded
+      AuthManager.checkAuthState();
+      
+      // Add event listeners for user interactions
+      const userContainer = document.getElementById('user-container');
+      const logoutBtn = document.getElementById('logout-btn');
+      const logoutContainer = document.getElementById('logout-container');
+      
+      if (userContainer) {
+        userContainer.addEventListener('click', function(e) {
+          e.stopPropagation();
+          logoutContainer.style.display = 
+            logoutContainer.style.display === 'block' ? 'none' : 'block';
+        });
+      }
+      
+     if (logoutBtn) {
+  logoutBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    AuthManager.logout();  // <-- this works
+  });
+}
+
+      document.addEventListener('click', function(e) {
+        if (logoutContainer && userContainer && !userContainer.contains(e.target)) {
+          logoutContainer.style.display = 'none';
+        }
+      });
+    });
+	
+	// Function to update the visibility of the browse link
+    function updateBrowseLinkVisibility(isLoggedIn) {
+      const browseLink = document.getElementById('browse-link');
+      if (browseLink) {
+        browseLink.style.display = isLoggedIn ? 'block' : 'none';
+      }
+    }
+	
+	
+	
+	
+	
+    function updateCheckOfferLinkVisibility(isLoggedIn) {
+  const checkOfferLink = document.getElementById('checkoffer-link');
+  if (checkOfferLink) {
+    checkOfferLink.style.display = isLoggedIn ? 'block' : 'none';
+  }
+}
+    // Function to update the visibility of the sell link
+    function updateSellLinkVisibility(isLoggedIn) {
+      const sellLink = document.getElementById('sell-link');
+      if (sellLink) {
+        sellLink.style.display = isLoggedIn ? 'block' : 'none';
+      }
+    }
+	
+	 // Function to update the visibility of the sell link
+    function updateDashboardLinkVisibility(isLoggedIn) {
+      const dashboardLink = document.getElementById('dashboard-link');
+      if (dashboardLink) {
+        dashboardLink.style.display = isLoggedIn ? 'block' : 'none';
+      }
+    }
+	
+	
+  </script>
+</body>
+</html>

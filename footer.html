@@ -1,0 +1,115 @@
+<!-- footer.html -->
+<footer>
+  <style>
+    footer {
+      background: linear-gradient(135deg, #1a3a4a 0%, #2c6c8c 100%);
+      color: white;
+      padding: 50px 0 20px;
+      margin-top: 50px;
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .footer-section h3 {
+      font-size: 20px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .footer-section h3::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 3px;
+      background-color: #ffcc00;
+      margin-top: 10px;
+    }
+
+    .footer-links {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin-bottom: 10px;
+    }
+
+    .footer-links a {
+      color: #ddd;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: #ffcc00;
+    }
+
+    .contact-info {
+      list-style: none;
+    }
+
+    .contact-info li {
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+    }
+
+    .contact-info i {
+      margin-right: 10px;
+      color: #ffcc00;
+    }
+
+    .copyright {
+      text-align: center;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 14px;
+    }
+  </style>
+
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>JUNKIFI</h3>
+        <p>Professional salvage yard marketplace connecting buyers and sellers nationwide.</p>
+      </div>
+
+      <div class="footer-section">
+        <h3>Services</h3>
+        <ul class="footer-links">
+          <li><a href="sell.html">List Vehicle</a></li>
+          <li><a href="browse.html">Browse Inventory</a></li>
+          <li><a href="#">Salvage Yards</a></li>
+          <li><a href="#">Vehicle History</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h3>Support</h3>
+        <ul class="footer-links">
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Safety Guide</a></li>
+          <li><a href="#">Terms of Service</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h3>Contact</h3>
+        <ul class="contact-info">
+          <li><i class="fas fa-phone"></i> </li>
+          <li><i class="fas fa-envelope"></i> support@junkifi.com</li>
+          <li><i class="fas fa-clock"></i> 24/7 Support Available</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="copyright">
+      <p>© 2024 JUNKIFI. All rights reserved. Licensed Salvage Marketplace.</p>
+    </div>
+  </div>
+</footer>
