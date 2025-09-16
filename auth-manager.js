@@ -1,4 +1,4 @@
-// auth.js - Combined version with Firebase + UI functionality
+
 class AuthManager {
   static auth = null;
   static db = null;
