@@ -545,5 +545,7 @@ body {
 
 
     .trust-safety {
-        grid-template-columns: repeat(2, 1fr); /* force 2 columns */
+           .trust-safety {
+        grid-template-columns: 1fr 1fr !important; /* force 2 equal columns */
+        gap: 10px;
     }
