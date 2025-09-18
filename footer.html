@@ -1,31 +1,56 @@
-<!-- footer.html -->
-<footer>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JUNKIFI Footer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Footer Styles */
     footer {
       background: linear-gradient(135deg, #9d0000 0%, #cc0000 100%);
       color: white;
-      padding: 5px 0 10px; /* smaller padding */
-      margin-top: 50px;
-      font-size: 12px; /* default smaller text */
+      padding: 15px 0 8px; /* ⬅ reduced */
+      margin-top: 40px;   /* ⬅ reduced */
+      font-size: 14px;
+      border-radius: 0px;
+      overflow: hidden;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 10px; /* ⬅ tighter */
     }
 
     .footer-content {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
+      gap: 15px; /* ⬅ reduced */
       margin-bottom: 0;
     }
 
     .footer-section h3 {
-      font-size: 14px; /* smaller heading */
-      margin-bottom: 10px;
+      font-size: 15px;
+      margin-bottom: 8px; /* ⬅ tighter */
       position: relative;
+      padding-bottom: 3px; /* ⬅ tighter */
     }
 
-    .footer-section h3::after {
-      width: 30px;
+    .footer-section h3:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 30px; /* ⬅ smaller underline */
       height: 2px;
-      margin-top: 5px;
+      background: #ffcc00;
     }
 
     .footer-links {
@@ -35,91 +60,159 @@
     }
 
     .footer-links li {
-      margin-bottom: 5px;
+      margin-bottom: 5px; /* ⬅ reduced */
     }
 
     .footer-links a {
       color: #ddd;
       text-decoration: none;
-      font-size: 12px; /* smaller link text */
+      font-size: 13px; /* ⬅ smaller */
       transition: color 0.3s;
+      display: block;
+      padding: 1px 0; /* ⬅ reduced */
     }
 
     .footer-links a:hover {
       color: #ffcc00;
+      transform: translateX(4px);
     }
 
     .contact-info {
       list-style: none;
       padding: 0;
       margin: 0;
-      font-size: 12px; /* smaller contact text */
+      font-size: 13px; /* ⬅ smaller */
     }
 
     .contact-info li {
-      margin-bottom: 2px;
+      margin-bottom: 6px; /* ⬅ reduced */
       display: flex;
       align-items: center;
     }
 
     .contact-info i {
-      margin-right: 5px;
+      margin-right: 8px;
       color: #ffcc00;
+      width: 14px; /* ⬅ smaller icon */
+      text-align: center;
     }
 
     .copyright {
       text-align: center;
-      padding-top: 5px;
+      padding-top: 10px; /* ⬅ reduced */
       border-top: 1px solid rgba(255, 255, 255, 0.1);
-      font-size: 12px; /* very small copyright */
+      font-size: 12px; /* ⬅ smaller */
+      margin-top: 10px; /* ⬅ reduced */
     }
 
-    /* Optional: reduce paragraph text inside sections */
     .footer-section p {
-      font-size: 12px;
-      margin-bottom: 5px;
+      font-size: 13px; /* ⬅ smaller */
+      margin-bottom: 10px; /* ⬅ reduced */
+      line-height: 1.4; /* ⬅ tighter */
+    }
+
+    /* Mobile-specific styles */
+    @media (max-width: 768px) {
+      footer {
+        padding: 12px 0 6px; /* ⬅ tighter mobile padding */
+        font-size: 13px;
+      }
+
+      .footer-content {
+        grid-template-columns: 1fr;
+        gap: 10px; /* ⬅ smaller gaps */
+      }
+
+      .mobile-two-column {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px; /* ⬅ reduced */
+      }
+
+      .junkifi-data {
+        margin-bottom: 8px; /* ⬅ reduced */
+      }
+
+      .footer-section h3 {
+        font-size: 14px; /* ⬅ smaller */
+      }
+    }
+	
+	
+	
+
+    /* Desktop styles */
+    @media (min-width: 769px) {
+      .mobile-two-column {
+        display: contents;
+      }
+    
+
+    .junkifi-data p {
+      padding-right: 8px; /* ⬅ reduced */
+    }
+
+    .copyright a {
+      color: white;
+      text-decoration: underline;
+    }
+
+    .copyright a:hover {
+      color: #ffcc00;
+    }
+
+    .footer-section {
+      padding: 6px; /* ⬅ reduced */
     }
   </style>
+</head>
+<body>
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section junkifi-data">
+          <h3>JUNKIFI</h3>
+          <p>Professional salvage yard marketplace connecting buyers and sellers nationwide. We make it easy to buy and sell salvaged vehicles.</p>
+        </div>
 
-  <div class="container">
-    <div class="footer-content">
-      <div class="footer-section">
-        <h3>JUNKIFI</h3>
-        <p>Professional salvage yard marketplace connecting buyers and sellers nationwide.</p>
+        <!-- This wrapper will create two columns on mobile -->
+        <div class="mobile-two-column">
+          <div class="footer-section">
+            <h3>Services</h3>
+            <ul class="footer-links">
+              <li><a href="sell.html">List Vehicle</a></li>
+              <li><a href="browse.html">Browse Inventory</a></li>
+              <li><a href="#">Salvage Yards</a></li>
+              <li><a href="#">Vehicle History</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-section">
+            <h3>Support</h3>
+            <ul class="footer-links">
+              <li><a href="#">Help Center</a></li>
+              <li><a href="#">Contact Us</a></li>
+              <li><a href="#">Safety Guide</a></li>
+              <li><a href="#">Terms of Service</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-section">
+          <h3>Contact</h3>
+          <ul class="contact-info">
+            <li><i class="fas fa-phone"></i> 812-223-5722</li>
+            <li><i class="fas fa-envelope"></i> support@junkifi.com</li>
+            <li><i class="fas fa-clock"></i> 24/7 Support Available</li>
+          </ul>
+        </div>
       </div>
 
-      <div class="footer-section">
-        <h3>Services</h3>
-        <ul class="footer-links">
-          <li><a href="sell.html">List Vehicle</a></li>
-          <li><a href="browse.html">Browse Inventory</a></li>
-          <li><a href="#">Salvage Yards</a></li>
-          <li><a href="#">Vehicle History</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-section">
-        <h3>Support</h3>
-        <ul class="footer-links">
-          <li><a href="#">Help Center</a></li>
-          <li><a href="#">Contact Us</a></li>
-          <li><a href="#">Safety Guide</a></li>
-          <li><a href="#">Terms of Service</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-section">
-        <h3>Contact</h3>
-        <ul class="contact-info">
-          <li><i class="fas fa-phone"></i> </li>
-          <li><i class="fas fa-envelope"></i> support@junkifi.com</li>
-          <li><i class="fas fa-clock"></i> 24/7 Support Available</li>
-        </ul>
+      <div class="copyright">
+        <p>© 2025 JUNKIFI. <a href="policy.html">Privacy Policy</a></p>
       </div>
     </div>
-
-    <div class="copyright">
-  <p>© 2025 JUNKIFI. <a href="policy.html" style="color: white; text-decoration: underline;">Privacy Policy</a></p>
-    </div>
-  </div>
-</footer>
+  </footer>
+</body>
+</html>

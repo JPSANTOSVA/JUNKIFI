@@ -102,7 +102,7 @@
 <!-- Notes Modal -->
 <div id="notesModal" class="notes-modal">
     <div class="notes-modal-content">
-        <h3>Add Note</h3>
+        <h3>Note</h3>
         <textarea id="noteText" placeholder="Enter your note here..."></textarea>
         <div class="notes-modal-buttons">
             <button id="cancelNoteBtn" class="notes-cancel-btn">Cancel</button>
@@ -890,7 +890,7 @@ vehicleCard.innerHTML = `
     <div class="notes-header">
         <h4>My Notes</h4>
         <button class="add-note-btn" onclick="openNotesModal('${vehicle.id}')">
-            <i class="fas fa-plus"></i> Add Note
+            <i class="fas fa-plus"></i>Note
         </button>
     </div>
     <div id="notes-container-${vehicle.id}">
@@ -912,15 +912,15 @@ vehicleCard.innerHTML = `
     </div>
 
     <p class="vehicle-specs">
-        <strong>Mileage:</strong> ${vehicle.mileage} 
-        <strong> | Title Status:</strong> ${vehicle.titleStatus} 
-        <strong> | Tire Condition:</strong> ${vehicle.tireCondition}
-    </p>
+  <span><strong>Mileage:</strong> ${vehicle.mileage}</span>
+  <span><strong>Title Status:</strong> ${vehicle.titleStatus}</span>
+  <span><strong>Tire Condition:</strong> ${vehicle.tireCondition}</span>
+</p>
 
-    <p class="vehicle-specs">
-        <strong>Interior:</strong> ${vehicle.interiorCondition} 
-        <strong> | Engine:</strong> ${vehicle.engineCondition}
-    </p>
+<p class="vehicle-specs">
+  <span><strong>Interior:</strong> ${vehicle.interiorCondition}</span>
+  <span><strong>Engine:</strong> ${vehicle.engineCondition}</span>
+</p>
 
     <div class="damage-row">
         ${bodyDamageHTML}

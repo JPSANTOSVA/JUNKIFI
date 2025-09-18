@@ -547,7 +547,7 @@ body {
 .filter-form {
     display: grid;
     grid-template-columns: repeat(4, 1fr) auto;
-    gap: 15px;
+    gap: 5px;
     align-items: end;
 }
 
@@ -809,6 +809,33 @@ body {
 
 
 @media (max-width: 480px) {
+	
+ .vehicle-specs {
+    display: flex;
+    flex-direction: column;
+    gap: 4px; /* Reduced gap */
+    margin-bottom: 8px; /* Reduced bottom margin */
+  }
+  
+  .vehicle-specs > span {
+    display: block;
+    width: 100%;
+    margin-bottom: 0; /* Remove bottom margin */
+  }
+  
+  .vehicle-specs strong {
+    min-width: 110px;
+    display: inline-block;
+  }
+  
+  /* Target the second specs paragraph to remove top margin */
+  .vehicle-details .vehicle-specs + .vehicle-specs {
+    margin-top: -4px; /* Negative margin to pull sections closer */
+  }
+	
+	
+	
+	
     .vehicle-header {
         display: flex;
         flex-direction: row;      /* keep title + actions on same row */
@@ -884,3 +911,80 @@ body {
 .filter-title {
     font-size: 1rem;  /* smaller heading */
 }
+
+
+
+    .add-note-btn {
+        padding: 4px 8px;   /* smaller padding */
+        font-size: 10px;   /* smaller text */
+        border-radius: 3px; /* slightly smaller corners */
+    }
+
+  .vehicle-details {
+        font-size: 0.8rem;   /* shrink all text */
+        line-height: 1.3;    /* tighter line spacing */
+    }
+
+    .spec-item,
+    .damage-item,
+    .parts-item,
+    .info-item {
+        font-size: 0.75rem;  /* even smaller for sub-details */
+        padding: 2px 0;      /* less padding between items */
+    }
+
+    .note-item {
+        font-size: 0.75rem;  /* smaller notes text */
+        padding: 6px 8px;    /* reduced box size */
+    }
+	
+	
+	
+	
+.vehicle-info {
+  display: grid;
+  grid-template-columns: auto auto;  /* columns size to fit content */
+  column-gap: 50px;                  /* spacing between columns */
+  row-gap: 6px;
+  align-items: center;
+}
+
+.vehicle-info span {
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  white-space: nowrap;   /* keep in one line */
+}
+
+.vehicle-info i {
+  margin-right: 5px;
+  flex-shrink: 0;        /* icon never shrinks */
+}
+/* Label smaller */
+  .form-group label {
+    font-size: 0.75rem; 
+    margin-bottom: 4px;
+  }
+
+ /* Inputs and dropdowns smaller */
+  .form-group select,
+  .form-group input {
+    font-size: 0.75rem;
+    padding: 6px 8px;
+    height: 32px;
+  }
+  /* Adjust All Available Vehicles header */
+  .saved-vehicles-header {
+    font-size: 1.35rem;     /* smaller heading */
+    text-align: center;  /* center it if you want */
+    margin-bottom: 15px; /* tighter spacing */
+  }
+
+  /* Adjust spacing for the list */
+  .vehicle-listings {
+    gap: 15px;           /* smaller gap between cards */
+    margin-bottom: 15px; /* less bottom space */
+  }
+  
+  
+  
