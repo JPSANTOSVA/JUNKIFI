@@ -53,6 +53,7 @@ class AuthManager {
     });
   }
 
+// Also update the checkAuthState function to handle hamburger visibility
 static checkAuthState() {
   return new Promise((resolve) => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -66,6 +67,9 @@ static checkAuthState() {
         updateCheckOfferLinkVisibility(true);
         updateSellLinkVisibility(true);
         updateDashboardLinkVisibility(true);
+        
+        // Show hamburger on mobile if logged in
+        updateHamburgerVisibility(true);
 
         resolve(true);
       } else {
@@ -77,13 +81,15 @@ static checkAuthState() {
         updateCheckOfferLinkVisibility(false);
         updateSellLinkVisibility(false);
         updateDashboardLinkVisibility(false);
+        
+        // Hide hamburger when not logged in
+        updateHamburgerVisibility(false);
 
         resolve(false);
       }
     });
   });
 }
-
 
   
   static async logout() {

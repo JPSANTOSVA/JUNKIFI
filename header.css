@@ -235,42 +235,45 @@ header {
   .header-content {
     display: flex;
     align-items: center;
-    justify-content: center; /* ✅ center everything */
+    justify-content: space-between; /* logo+truck in middle, hamburger left, auth right */
     position: relative;
   }
-  
+
+  /* Container for truck + logo */
+  .logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;         /* spacing between truck and JUNKIFI */
+    flex: 1;          /* take available space */
+  }
+
+  .truck-img {
+    height: 50px;     /* adjust truck size for mobile */
+    display: inline-block;
+  }
+
+  .logo {
+    font-size: 30px;  
+    transform: scaleX(1.8) skewX(-5deg);
+    text-align: center;
+    display: inline-block;
+  }
+
+  /* Make sure hamburger stays left */
+  .menu-toggle {
+    order: -1;          /* force left side */
+    margin-right: 10px; /* spacing */
+  }
+
+  /* Auth/user stays far right */
   .auth-buttons {
-    margin-left: auto; /* pushes user section to the far right */
+    margin-left: auto;
     display: flex;
     align-items: center;
     gap: 10px;
   }
   
-  .menu-toggle {
-    display: block;
-    margin-left: 0;   /* remove auto alignment */
-    margin-right: auto; /* optional, ensures it stays at left */
-    order: -1; /* 👈 forces hamburger to appear before logo */
-  }
-  
-  /* Center logo + truck in header */
-  .logo-container {
-    display: flex;
-    align-items: center;
-    justify-content: center; /* center horizontally */
-    gap:10px;               /* space between truck.png and JUNKIFI */
-    margin: 0 auto;          /* ensures centering in flex parent */
-  }
-  
-  .truck-img {
-    height: 50px;      /* adjust truck size for mobile */
-  }
-  
-  .logo {
-    font-size: 30px;   /* adjust logo text size */
-    transform: scaleX(1.8) skewX(-5deg);
-    text-align: Center;
-  }
   
   .user-container {
     gap: 4px;
@@ -367,5 +370,11 @@ header {
   
   .overlay.active {
     display: block;
+  }
+
+
+@media (min-width: 769px) {
+  .menu-toggle {
+    display: none !important; /* Force hide on desktop */
   }
 }

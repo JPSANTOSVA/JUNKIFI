@@ -238,12 +238,3 @@
         text-align: center;
         font-size: 14px;
     }
-}
-
-/* Force 2 columns on all mobiles */
-@media (max-width: 480px) {
-    .dashboard-stats {
-        grid-template-columns: 1fr 1fr !important; /* lock to 2 equal columns */
-        gap: 10px;
-    }
-}

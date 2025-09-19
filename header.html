@@ -10,6 +10,29 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="header.css">
+  
+  
+  
+  
+  
+  
+  	     <!-- ✅ Google Analytics 4 Tracking Code -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZCWFYPMDQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ZCWFEYPMD0');
+    </script>
+	
+	
+	
+  
+  
+  
+  
+  
+  
 </head>
 <body>
 <!-- The rest of your HTML content remains the same -->
@@ -18,9 +41,9 @@
     <div class="header-content">
 
       <!-- Hamburger button (mobile only) -->
-      <button class="menu-toggle" id="menu-toggle">
-        <i class="fas fa-bars"></i>
-      </button>
+<button class="menu-toggle" id="menu-toggle" style="display: none;">
+  <i class="fas fa-bars"></i>
+</button>
 
       <div class="logo-container">
         <img src="truck.png" alt="Truck" class="truck-img">
@@ -67,6 +90,18 @@
       overlay.classList.add('active');
     });
 
+
+
+
+
+
+
+
+
+
+
+
+
     // Close menu function
     function closeMenu() {
       navLinks.classList.remove('active');
@@ -108,69 +143,109 @@
           overlay.classList.add("active");
         }
       }
-    });
+    // Add this NEW CODE SECTION here:
+  // Add window resize listener
+  window.addEventListener('resize', function() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    updateHamburgerVisibility(isLoggedIn);
+  });
+  });
   
-    document.addEventListener('DOMContentLoaded', function() {
-      // Check authentication state when DOM is loaded
-      AuthManager.checkAuthState();
-      
-      // Add event listeners for user interactions
-      const userContainer = document.getElementById('user-container');
-      const logoutBtn = document.getElementById('logout-btn');
-      const logoutContainer = document.getElementById('logout-container');
-      
-      if (userContainer) {
-        userContainer.addEventListener('click', function(e) {
-          e.stopPropagation();
-          logoutContainer.style.display = 
-            logoutContainer.style.display === 'block' ? 'none' : 'block';
-        });
-      }
-      
-      if (logoutBtn) {
-        logoutBtn.addEventListener('click', function(e) {
-          e.stopPropagation();
-          AuthManager.logout();  // <-- this works
-        });
-      }
-
-      document.addEventListener('click', function(e) {
-        if (logoutContainer && userContainer && !userContainer.contains(e.target)) {
-          logoutContainer.style.display = 'none';
-        }
+  
+  
+  
+  
+  
+ // Replace your existing DOMContentLoaded event with this:
+  document.addEventListener('DOMContentLoaded', function() {
+    // Check authentication state when DOM is loaded
+    AuthManager.checkAuthState();
+    
+    // Check hamburger visibility on load
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    updateHamburgerVisibility(isLoggedIn);
+    
+    // Add event listeners for user interactions (your existing code)
+    const userContainer = document.getElementById('user-container');
+    const logoutBtn = document.getElementById('logout-btn');
+    const logoutContainer = document.getElementById('logout-container');
+    
+    if (userContainer) {
+      userContainer.addEventListener('click', function(e) {
+        e.stopPropagation();
+        logoutContainer.style.display = 
+          logoutContainer.style.display === 'block' ? 'none' : 'block';
       });
-    });
-	
-    // Function to update the visibility of the browse link
-    function updateBrowseLinkVisibility(isLoggedIn) {
-      const browseLink = document.getElementById('browse-link');
-      if (browseLink) {
-        browseLink.style.display = isLoggedIn ? 'block' : 'none';
-      }
-    }
-	
-    function updateCheckOfferLinkVisibility(isLoggedIn) {
-      const checkOfferLink = document.getElementById('checkoffer-link');
-      if (checkOfferLink) {
-        checkOfferLink.style.display = isLoggedIn ? 'block' : 'none';
-      }
     }
     
-    // Function to update the visibility of the sell link
-    function updateSellLinkVisibility(isLoggedIn) {
-      const sellLink = document.getElementById('sell-link');
-      if (sellLink) {
-        sellLink.style.display = isLoggedIn ? 'block' : 'none';
-      }
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        AuthManager.logout();  // <-- this works
+      });
     }
+
+    document.addEventListener('click', function(e) {
+      if (logoutContainer && userContainer && !userContainer.contains(e.target)) {
+        logoutContainer.style.display = 'none';
+      }
+    });
+    
+    // Your existing active page highlighting code
+    const currentPage = window.location.pathname.split("/").pop();
+    document.querySelectorAll(".nav-links a").forEach(link => {
+      if (link.getAttribute("href") === currentPage) {
+        link.classList.add("active");
+      }
+    });
+  });
 	
-    // Function to update the visibility of the sell link
-    function updateDashboardLinkVisibility(isLoggedIn) {
-      const dashboardLink = document.getElementById('dashboard-link');
-      if (dashboardLink) {
-        dashboardLink.style.display = isLoggedIn ? 'block' : 'none';
-      }
+	
+	// Add this function to control hamburger menu visibility
+function updateHamburgerVisibility(isLoggedIn) {
+  const menuToggle = document.getElementById('menu-toggle');
+  if (menuToggle) {
+    // Show hamburger on mobile only if user is logged in
+    if (window.innerWidth <= 768) {
+      menuToggle.style.display = isLoggedIn ? 'block' : 'none';
+    } else {
+      menuToggle.style.display = 'none'; // Always hide on desktop
     }
+  }
+}
+	
+	
+// Modify your existing functions to include hamburger visibility
+function updateBrowseLinkVisibility(isLoggedIn) {
+  const browseLink = document.getElementById('browse-link');
+  if (browseLink) {
+    browseLink.style.display = isLoggedIn ? 'block' : 'none';
+  }
+  updateHamburgerVisibility(isLoggedIn); // Add this line
+}
+	
+function updateCheckOfferLinkVisibility(isLoggedIn) {
+  const checkOfferLink = document.getElementById('checkoffer-link');
+  if (checkOfferLink) {
+    checkOfferLink.style.display = isLoggedIn ? 'block' : 'none';
+  }
+  updateHamburgerVisibility(isLoggedIn); // Add this line
+}
+function updateSellLinkVisibility(isLoggedIn) {
+  const sellLink = document.getElementById('sell-link');
+  if (sellLink) {
+    sellLink.style.display = isLoggedIn ? 'block' : 'none';
+  }
+  updateHamburgerVisibility(isLoggedIn); // Add this line
+}
+	
+function updateDashboardLinkVisibility(isLoggedIn) {
+  const dashboardLink = document.getElementById('dashboard-link');
+  if (dashboardLink) {
+    dashboardLink.style.display = isLoggedIn ? 'block' : 'none';
+  }
+  updateHamburgerVisibility(isLoggedIn); // Add this line
+}
 	
     document.addEventListener("DOMContentLoaded", () => {
       const currentPage = window.location.pathname.split("/").pop();
