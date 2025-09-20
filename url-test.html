@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Junkifi - URL Configuration Test</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 10px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+        }
+        .section.error {
+            border-left-color: #e74c3c;
+        }
+        .section.success {
+            border-left-color: #2ecc71;
+        }
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        p {
+            margin-bottom: 15px;
+        }
+        ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        code {
+            background: #2c3e50;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .test-area {
+            background: #e8f4fc;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .button {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        .button:hover {
+            background: #2980b9;
+        }
+        .button.success {
+            background: #2ecc71;
+        }
+        .button.success:hover {
+            background: #27ae60;
+        }
+        .button.error {
+            background: #e74c3c;
+        }
+        .button.error:hover {
+            background: #c0392b;
+        }
+        .status {
+            padding: 8px 15px;
+            border-radius: 5px;
+            margin-left: 10px;
+            font-weight: 600;
+        }
+        .status.unknown {
+            background: #f39c12;
+            color: white;
+        }
+        .status.success {
+            background: #2ecc71;
+            color: white;
+        }
+        .status.error {
+            background: #e74c3c;
+            color: white;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #ecf0f1;
+            color: #7f8c8d;
+        }
+        .server-config {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Junkifi URL Configuration Test</h1>
+            <p>Diagnosing why junkifi.com/qrtruck returns a 404 error</p>
+        </header>
+        
+        <div class="content">
+            <div class="section error">
+                <h2>Problem Detected</h2>
+                <p>You're getting a 404 error when accessing <code>junkifi.com/qrtruck</code> even though you've created <code>qrtruck.html</code>.</p>
+            </div>
+            
+            <div class="section">
+                <h2>Why This Happens</h2>
+                <p>Most web servers don't automatically remove the <code>.html</code> extension from URLs. When you visit <code>junkifi.com/qrtruck</code>, the server looks for a file with that exact name, not <code>qrtruck.html</code>.</p>
+                
+                <h3>Possible Solutions:</h3>
+                <ul>
+                    <li><strong>Option 1:</strong> Access the file with the full extension: <code>junkifi.com/qrtruck.html</code></li>
+                    <li><strong>Option 2:</strong> Configure your server to rewrite URLs (requires server access)</li>
+                    <li><strong>Option 3:</strong> Create a directory named <code>qrtruck</code> with an <code>index.html</code> file inside</li>
+                </ul>
+            </div>
+            
+            <div class="test-area">
+                <h2>Test Your Current Setup</h2>
+                <p>Try accessing these URLs to diagnose the issue:</p>
+                
+                <p>
+                    <a href="#" id="test1" class="button">Test junkifi.com/qrtruck</a>
+                    <span id="status1" class="status unknown">Not tested</span>
+                </p>
+                
+                <p>
+                    <a href="#" id="test2" class="button">Test junkifi.com/qrtruck.html</a>
+                    <span id="status2" class="status unknown">Not tested</span>
+                </p>
+                
+                <p id="result"></p>
+            </div>
+            
+            <div class="section">
+                <h2>Server Configuration Examples</h2>
+                <p>If you have access to your server configuration, you can set up URL rewriting:</p>
+                
+                <h3>For Apache servers (.htaccess):</h3>
+                <div class="server-config">
+                    RewriteEngine On<br>
+                    RewriteCond %{REQUEST_FILENAME} !-d<br>
+                    RewriteCond %{REQUEST_FILENAME}\.html -f<br>
+                    RewriteRule ^(.*)$ $1.html [L]
+                </div>
+                
+                <h3>For Nginx servers:</h3>
+                <div class="server-config">
+                    location / {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;try_files $uri $uri.html $uri/ =404;<br>
+                    }
+                </div>
+            </div>
+            
+            <div class="section success">
+                <h2>Quick Fix</h2>
+                <p>For now, use the full HTML extension in your QR codes and marketing links:</p>
+                <ul>
+                    <li>Use <code>junkifi.com/qrtruck.html</code> instead of <code>junkifi.com/qrtruck</code></li>
+                    <li>Use <code>junkifi.com/QRShop.html</code> instead of <code>junkifi.com/QRShop</code></li>
+                    <li>Use <code>junkifi.com/QRFB.html</code> instead of <code>junkifi.com/QRFB</code></li>
+                    <li>Use <code>junkifi.com/QRGad.html</code> instead of <code>junkifi.com/QRGad</code></li>
+                </ul>
+                <p>This will work immediately without any server configuration changes.</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Junkifi GA4 Tracking Setup Helper | Displaying this page at: <span id="current-url"></span></p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Display current URL
+            document.getElementById('current-url').textContent = window.location.href;
+            
+            // Test link functions
+            document.getElementById('test1').addEventListener('click', function(e) {
+                e.preventDefault();
+                testUrl(window.location.origin + '/qrtruck', 'status1');
+            });
+            
+            document.getElementById('test2').addEventListener('click', function(e) {
+                e.preventDefault();
+                testUrl(window.location.origin + '/qrtruck.html', 'status2');
+            });
+            
+            function testUrl(url, statusElementId) {
+                const statusElement = document.getElementById(statusElementId);
+                statusElement.textContent = 'Testing...';
+                statusElement.className = 'status unknown';
+                
+                fetch(url, { method: 'HEAD' })
+                    .then(response => {
+                        if (response.ok) {
+                            statusElement.textContent = 'Success (200)';
+                            statusElement.className = 'status success';
+                            document.getElementById('result').innerHTML = 
+                                `<strong>Result:</strong> <code>${url}</code> is accessible!`;
+                        } else {
+                            statusElement.textContent = `Error (${response.status})`;
+                            statusElement.className = 'status error';
+                            document.getElementById('result').innerHTML = 
+                                `<strong>Result:</strong> <code>${url}</code> returned status ${response.status}`;
+                        }
+                    })
+                    .catch(error => {
+                        statusElement.textContent = 'Failed';
+                        statusElement.className = 'status error';
+                        document.getElementById('result').innerHTML = 
+                            `<strong>Result:</strong> <code>${url}</code> could not be loaded. Error: ${error}`;
+                    });
+            }
+        });
+    </script>
+</body>
+</html>
