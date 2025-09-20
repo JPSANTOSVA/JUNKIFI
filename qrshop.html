@@ -1,10 +1,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JUNKIFI - Professional Salvage Yard Marketplace</title>
+    <title>JUNKIFI - QRShop</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="index.css">
+
+
+
+  	     <!-- ✅ Google Analytics 4 Tracking Code -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZCWFYPMDQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ZCWFEYPMD0');
+    </script>
+	
+
+
+
 
     <!-- Add Firebase SDKs FIRST -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -105,7 +120,7 @@
         <!-- Submit Button -->
 <div class="form-row button-row">
   <button type="submit" class="search-btn" id="get-offer-btn" disabled>
-    Get Offer
+    Get offer
   </button>
 </div>
 
@@ -176,7 +191,7 @@ fetch("header.html")
     }
     
 
-	// Add redirect functionality to the Get Offer button
+	// Add redirect functionality to the Get offer button
 document.getElementById('get-offer-btn').addEventListener('click', function() {
     window.location.href = 'offer.html';
 });
@@ -347,7 +362,7 @@ document.getElementById('vehicle-form').addEventListener('submit', function(e) {
         sessionStorage.setItem('vehicleBasicInfo', JSON.stringify(vehicleData));
         
         // Redirect to offer page
-        window.location.href = 'Offer.html';
+        window.location.href = 'offer.html';
     }
 });
 
@@ -399,7 +414,7 @@ function checkFormCompletion() {
         modelSelect.addEventListener('change', checkFormCompletion);
         locationInput.addEventListener('input', checkFormCompletion);
         
-        // Add click event to Get Offer button
+        // Add click event to Get offer button
         getOfferButton.addEventListener('click', function() {
             if (validateForm()) {
                 // If form is valid, redirect to 
