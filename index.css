@@ -18,14 +18,16 @@
     --dark-red: #b71c1c;
     --light-red: #ffcdd2;
     --white: #ffffff;
-    --off-white: #f8f9fa;
+    --off-white: gray;
+
     --light-gray: #e0e0e0;
     --text-dark: #212121;
     --text-light: #757575;
+	--dark-gray: #555555;  /* dark gray */
 }
 
 body {
-    background-color: var(--off-white);
+    background-color: gray; /* or use a hex: #808080 */
     color: var(--text-dark);
     line-height: 1.6;
     font-size: var(--base-font-size);
@@ -37,37 +39,12 @@ body {
     padding: 0 20px;
 }
 
-/* Header */
-.header {
-    background-color: var(--white);
-    padding: 15px 0;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
 
-.logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
 
-.logo-text {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: var(--primary-red);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.logo-tagline {
-    font-size: 1rem;
-    color: var(--text-dark);
-    margin-top: 5px;
-}
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(90deg, var(--primary-red) 100%, var(--white) 100%);
+    background: 
     padding: 60px 0;
     text-align: center;
     color: var(--white);
@@ -86,19 +63,75 @@ body {
     background-size: 100% 100%;
 }
 
+
 .hero h1 {
-    font-size: calc(var(--base-font-size) * var(--h1-scale));
-    margin-bottom: 20px;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-    position: relative;
+    font-size: clamp(3rem, 10vw, 5rem);
+    font-weight: 900;
+    letter-spacing: -2px;
+    line-height: 1.3;
+    margin-top: 5px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    color: #fffaec; /* soft off-white */
+    text-shadow: 
+      2px 2px 2px black,
+     -2px -2px 2px black,
+      2px -2px 2px black,
+     -2px  2px 2px black; /* ✅ black outline */
 }
 
+
+
 .hero p {
-    font-size: calc(var(--base-font-size) * var(--p-scale));
-    max-width: 700px;
-    margin: 0 auto 30px;
-    position: relative;
+  font-size: clamp(1rem, 1vw, 5rem);
+  text-shadow: 2px 2px 8px rgba(255,255,255,0.9); /* ✅ white shadow */
+  color: black;
+  margin: 0;
+
+  position: absolute;
+  top: 120px;
+  left: 50%;
+  transform: translateX(-50%);
 }
+
+
+
+.trustpilot-rating {
+    display: flex;
+    align-items: center;
+    justify-content: center;  
+    gap: 8px;
+     margin-top: 5em;  /* ~20 text rows down */
+    margin-bottom: -15px;
+    font-family: 'Roboto', Helvetica, Arial, sans-serif;
+}
+
+
+.trustpilot-rating .stars {
+    color: #FFD700;
+    font-size: 1.2rem;
+}
+
+.trustpilot-rating .rating-text {
+    font-size: 1rem;
+    font-weight: 500;
+    color: red;
+    letter-spacing: 0.2px;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .list-vehicle-btn {
     background-color: var(--white);
@@ -140,33 +173,51 @@ body {
 .form-group input {
     width: 100%;
     padding: 12px;
-    border: 1px solid var(--light-gray);
+    border: 1px solid var(--dark-gray); /* now works */
     border-radius: 5px;
     font-size: calc(var(--base-font-size) * var(--p-scale));
 }
 
+
 .search-btn {
-    background-color: var(--primary-red);
+    background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
     color: var(--white);
-    border: none;
-    padding: 12px 25px;
-    border-radius: 5px;
-    font-size: calc(var(--base-font-size) * var(--button-scale));
-    font-weight: bold;
+    border: 1px solid black;   /* ✅ Thin black outline */
+    padding: 16px 40px;
+    border-radius: 50px;
+
+    /* 🔄 Match h1 font style */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1rem;         /* bigger, more like a headline */
+    font-weight: 900;          /* heavy like h1 */
+    letter-spacing: -1px;      /* tighter, matches h1 */
+    text-transform: uppercase;
+
     cursor: pointer;
-    align-self: flex-end;
-    transition: background-color 0.3s;
+    align-self: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+
+    /* ✅ Outline similar to h1 */
+    text-shadow: 
+      2px 2px 2px black,
+     -2px -2px 2px black,
+      2px -2px 2px black,
+     -2px  2px 2px black;
 }
 
+
 .search-btn:hover {
-    background-color: var(--dark-red);
+    transform: translateY(-3px) scale(1.03);
+    background: linear-gradient(135deg, #e53935, #c62828);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
 }
 
 /* Content Sections */
 .section-title {
     text-align: center;
     margin: 50px 0 30px;
-    color: var(--primary-red);
+    color: #fffaec; /* changed from var(--primary-red) */
     font-size: calc(var(--base-font-size) * var(--h2-scale));
     position: relative;
     padding-bottom: 15px;
@@ -373,6 +424,8 @@ body {
 
 /* ===== DESKTOP STYLES (min-width: 769px) ===== */
 @media (min-width: 769px) {
+	
+	
     .search-form {
         background-color: var(--white);
         padding: 25px;
@@ -380,6 +433,7 @@ body {
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         max-width: 450px;
         margin: 0 auto;
+		margin-top: 100px; /* ✅ pushes form lower */
         height: 430px;
         position: relative;
     }
@@ -404,17 +458,17 @@ body {
         max-width: none;
     }
 
-    /* Button row */
-    .form-row.button-row {
-        display: flex;
-        justify-content: center;
-        grid-template-columns: 1fr;
-    }
+.form-row.button-row {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px; /* optional spacing */
+}
 
-    .form-row.button-row .search-btn {
-        max-width: 150px;
-        width: 100%;
-    }
+.form-row.button-row .search-btn {
+    max-width: none;   /* remove forced shrinking */
+    width: auto;       /* button sizes naturally */
+}
+
 }
 
 /* ===== MOBILE STYLES (max-width: 768px) ===== */
@@ -431,34 +485,46 @@ body {
         text-align: center;
     }
     
-    .search-form {
+	
+ .search-form {
         background-color: var(--white);
-        padding: 25px;
         border-radius: 10px;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         max-width: 500px;
-        margin: 0 auto;
-        height: 420px;
+        margin: 60px auto 50px;  /* ⬅️ pushes it down */
         position: relative;
+
+        /* ✅ Compact adjustments */
+        height: auto;        /* let content decide */
+        min-height: unset;   /* remove forced tall height */
+        padding: 25px;       /* smaller padding */
     }
-    
-    .search-form {
-        height: auto;
-        min-height: 520px;
-        padding: 20px 15px;
-    }
-    
+
     /* Stack all form elements vertically */
     .form-row {
         flex-direction: column;
-        margin-bottom: 10px;
+        margin-bottom: 8px; /* tighter spacing */
     }
-    
+
     .form-group.small {
         flex: 0 0 100%;
         max-width: 100%;
-        margin-bottom: 15px;
+        margin-bottom: 10px; /* less spacing */
     }
+
+    .form-group select,
+    .form-group input {
+        padding: 8px;        /* smaller fields */
+        font-size: 13px;
+    }
+
+    .form-group label {
+        font-size: 12px;
+        margin-bottom: 4px;
+    }
+	
+	
+
 
     /* Mobile-only fields */
     .mobile-only-field {
@@ -484,8 +550,24 @@ body {
     }
     
     .hero h1 {
-        font-size: calc(var(--base-font-size) * 1.5);
+        font-size: calc(var(--base-font-size) * 1.8);
+		margin-top: -15px;
+		margin-bottom: 40px;
     }
+	
+	.hero p {
+  font-size: 10px;
+  text-shadow:none; /* ✅ white shadow */
+  color: white;
+  margin: 0;
+  position: absolute;
+  top: 65px;
+  left: 50%;
+  transform: translateX(-50%);
+  
+}
+	
+	
     
     /* Adjust trust items for mobile */
     .trust-safety {

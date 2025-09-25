@@ -164,6 +164,39 @@
     .footer-section {
       padding: 6px; /* ⬅ reduced */
     }
+	
+.footer-links.not-clickable li {
+  color: #ddd;
+  font-size: 13px;
+  padding: 1px 0;
+  cursor: default;        /* removes pointer hand */
+}
+
+.footer-links.not-clickable li:hover {
+  color: #ffcc00;         /* keep hover effect if you want */
+  transform: none;        /* disable the slide */
+}
+
+
+
+
+.contact-info.not-clickable li {
+  color: #ddd;
+  font-size: 13px;
+  cursor: default;   /* prevents "hand" cursor */
+}
+
+.contact-info.not-clickable li:hover {
+  color: #ffcc00;    /* keep hover highlight if you want */
+}
+
+
+
+
+
+
+
+	
   </style>
 </head>
 <body>
@@ -173,31 +206,30 @@
       <div class="footer-content">
         <div class="footer-section junkifi-data">
           <h3>JUNKIFI</h3>
-          <p>Professional salvage yard marketplace connecting buyers and sellers nationwide. We make it easy to buy and sell salvaged vehicles.</p>
+          <p>Fast offers for your junk car.We offer 5 star service for 5 star customers.</p> 
         </div>
 
         <!-- This wrapper will create two columns on mobile -->
         <div class="mobile-two-column">
-          <div class="footer-section">
-            <h3>Services</h3>
-            <ul class="footer-links">
-              <li><a href="sell.html">List Vehicle</a></li>
-              <li><a href="browse.html">Browse Inventory</a></li>
-              <li><a href="#">Salvage Yards</a></li>
-              <li><a href="#">Vehicle History</a></li>
-            </ul>
-          </div>
+    <div class="footer-section">
+  <h3>Services</h3>
+  <ul class="footer-links not-clickable">
+    <li>List Vehicle</li>
+    <li>Browse Inventory</li>
+    <li>Salvage Yards</li>
+    <li>Vehicle History</li>
+  </ul>
+</div>
 
-          <div class="footer-section">
-            <h3>Support</h3>
-            <ul class="footer-links">
-              <li><a href="#">Help Center</a></li>
-              <li><a href="#">Contact Us</a></li>
-              <li><a href="#">Safety Guide</a></li>
-              <li><a href="#">Terms of Service</a></li>
-            </ul>
-          </div>
-        </div>
+<div class="footer-section">
+  <h3>Contact</h3>
+  <ul class="contact-info not-clickable">
+    <li><i class="fas fa-phone"></i> 812-223-5722</li>
+    <li><i class="fas fa-envelope"></i> support@junkifi.com</li>
+    <li><i class="fas fa-clock"></i> 24/7 Support Available</li>
+  </ul>
+</div>
+
 
         <div class="footer-section">
           <h3>Contact</h3>

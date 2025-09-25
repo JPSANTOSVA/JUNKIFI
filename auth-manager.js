@@ -1,4 +1,3 @@
-
 class AuthManager {
   static auth = null;
   static db = null;
@@ -53,44 +52,42 @@ class AuthManager {
     });
   }
 
-// Also update the checkAuthState function to handle hamburger visibility
-static checkAuthState() {
-  return new Promise((resolve) => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        document.getElementById("sign-in-btn").style.display = "none";
-        document.getElementById("user-container").style.display = "flex";
-        document.getElementById("user-email").textContent = user.email;
+  // Updated checkAuthState function
+  static checkAuthState() {
+    return new Promise((resolve) => {
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          // Use the new showUserContainer function
+          this.showUserContainer(user.email);
 
-        // Show nav links
-        updateBrowseLinkVisibility(true);
-        updateCheckOfferLinkVisibility(true);
-        updateSellLinkVisibility(true);
-        updateDashboardLinkVisibility(true);
-        
-        // Show hamburger on mobile if logged in
-        updateHamburgerVisibility(true);
+          // Show nav links
+          updateBrowseLinkVisibility(true);
+          updateCheckOfferLinkVisibility(true);
+          updateSellLinkVisibility(true);
+          updateDashboardLinkVisibility(true);
+          
+          // Show hamburger on mobile if logged in
+          updateHamburgerVisibility(true);
 
-        resolve(true);
-      } else {
-        document.getElementById("sign-in-btn").style.display = "block";
-        document.getElementById("user-container").style.display = "none";
+          resolve(true);
+        } else {
+          // Use the new hideUserContainer function
+          this.hideUserContainer();
 
-        // Hide nav links
-        updateBrowseLinkVisibility(false);
-        updateCheckOfferLinkVisibility(false);
-        updateSellLinkVisibility(false);
-        updateDashboardLinkVisibility(false);
-        
-        // Hide hamburger when not logged in
-        updateHamburgerVisibility(false);
+          // Hide nav links
+          updateBrowseLinkVisibility(false);
+          updateCheckOfferLinkVisibility(false);
+          updateSellLinkVisibility(false);
+          updateDashboardLinkVisibility(false);
+          
+          // Hide hamburger when not logged in
+          updateHamburgerVisibility(false);
 
-        resolve(false);
-      }
+          resolve(false);
+        }
+      });
     });
-  });
-}
-
+  }
   
   static async logout() {
     try {
@@ -108,67 +105,59 @@ static checkAuthState() {
     }
   }
 
+  // Updated updateUI function using the new helper functions
   static updateUI(isLoggedIn, email = '') {
-  const signInBtn = document.getElementById('sign-in-btn');
-  const signUpBtn = document.getElementById('sign-up-btn');
-  const userContainer = document.getElementById('user-container');
-  const userEmailSpan = document.getElementById('user-email');
-  const sellLink = document.getElementById('sell-link');
-  const dashboardLink = document.getElementById('dashboard-link');
-  const browseLink = document.getElementById('browse-link'); // NEW
+    const userEmailSpan = document.getElementById('user-email');
+    
+    // Update sell link visibility
+    if (typeof updateSellLinkVisibility === 'function') {
+      updateSellLinkVisibility(isLoggedIn);
+    }
+    
+    // Update dashboard link visibility
+    if (typeof updateDashboardLinkVisibility === 'function') {
+      updateDashboardLinkVisibility(isLoggedIn);
+    }
+    
+    // Update check offer link visibility
+    if (typeof updateCheckOfferLinkVisibility === 'function') {
+      updateCheckOfferLinkVisibility(isLoggedIn);
+    }
+    
+    // Update browse link visibility
+    if (typeof updateBrowseLinkVisibility === 'function') {
+      updateBrowseLinkVisibility(isLoggedIn);
+    }
 
-   // Update sell link visibility
-  if (typeof updateSellLinkVisibility === 'function') {
-    updateSellLinkVisibility(isLoggedIn);
-  }
-  
-  // Update dashboard link visibility
-  if (typeof updateDashboardLinkVisibility === 'function') {
-    updateDashboardLinkVisibility(isLoggedIn);
-  }
-  
-  // Update check offer link visibility
-  if (typeof updateCheckOfferLinkVisibility === 'function') {
-    updateCheckOfferLinkVisibility(isLoggedIn);
-  }
-  
-  // NEW: Update browse link visibility
-  if (typeof updateBrowseLinkVisibility === 'function') {
-    updateBrowseLinkVisibility(isLoggedIn);
-  }
-
-    if (signInBtn && signUpBtn && userContainer && userEmailSpan) {
-      if (isLoggedIn) {
-        signInBtn.style.display = 'none';
-        signUpBtn.style.display = 'none';
-        userContainer.style.display = 'flex';
-        userEmailSpan.textContent = email ? email.split('@')[0] : 'User';
-        
-        if (sellLink) {
-          sellLink.style.display = 'block';
-        }
-        
-        if (dashboardLink) {
-          dashboardLink.style.display = 'block';
-        }
-      } else {
-        signInBtn.style.display = 'block';
-        signUpBtn.style.display = 'block';
-        userContainer.style.display = 'none';
-        userEmailSpan.textContent = '';
-        
-        if (sellLink) {
-          sellLink.style.display = 'none';
-        }
-        
-        if (dashboardLink) {
-          dashboardLink.style.display = 'none';
-        }
-      }
+    if (isLoggedIn) {
+      this.showUserContainer(email);
+    } else {
+      this.hideUserContainer();
     }
     
     // Setup dropdown events after UI update
     this.setupDropdownEvents();
+  }
+
+  // NEW: Helper function to show user container
+  static showUserContainer(email) {
+    const userContainer = document.getElementById('user-container');
+    const userEmail = document.getElementById('user-email');
+    
+    if (userContainer && userEmail) {
+      userEmail.textContent = email ? email.split('@')[0] : 'User';
+      userContainer.classList.add('visible');
+      userContainer.style.display = 'flex';
+    }
+  }
+
+  // NEW: Helper function to hide user container
+  static hideUserContainer() {
+    const userContainer = document.getElementById('user-container');
+    if (userContainer) {
+      userContainer.classList.remove('visible');
+      userContainer.style.display = 'none';
+    }
   }
   
   static setupDropdownEvents() {

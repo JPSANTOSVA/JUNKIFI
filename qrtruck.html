@@ -1,12 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JUNKIFI - QRTruck</title>
+    <title>JUNKIFI</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="index.css">
-	
-	
+  
+  
   	     <!-- ✅ Google Analytics 4 Tracking Code -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZCWFYPMDQ"></script>
     <script>
@@ -16,6 +18,9 @@
       gtag('config', 'G-ZCWFEYPMD0');
     </script>
 	
+	
+	
+  
     <!-- Add Firebase SDKs FIRST -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
@@ -36,16 +41,38 @@
 <!-- Header Placeholder -->
 <div id="header-placeholder"></div>
 
+
+  <!-- ✅ Trustpilot Rating moved inside hero 
+    <div class="trustpilot-rating">
+      <span class="stars">
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star-half-alt"></i>
+      </span>
+      <span class="rating-text">4.7 stars based on 55,000 Trustpilot reviews</span>
+    </div>
+
+-->
+
+
+
+
+
+
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <h1>Sell Your Car the Easy Way</h1>
-            <p>Guaranteed. Simple. Trusted.</p>
+             <h1>WE BUY JUNK CARS</h1>
+    <p>Get a legit offer in minutes-with free pickup, and payment on the spot.</p>
             
             <button class="list-vehicle-btn" id="list-vehicle-btn" style="display: none;">
                 <i class="fas fa-plus"></i> List a Vehicle
             </button>
             
+			
+			
 <div class="search-form">
   <form id="vehicle-form">
     
@@ -80,7 +107,7 @@
 
       <div class="form-group small">
         <label for="location">Car Zip Code</label>
-        <input type="text" id="location" placeholder="Car Zip Code" required>
+        <input type="text" id="location" placeholder="" required>
         <div class="error-message" id="location-error">Please enter a zip code</div>
       </div>
     </div>
@@ -89,13 +116,13 @@
     <div class="form-row">
       <div class="form-group small">
         <label for="email">Email</label>
-        <input type="text" id="email" placeholder="Enter Email" required>
+        <input type="text" id="email" placeholder="" required>
         <div class="error-message" id="email-error">Please enter an Email</div>
       </div>
 
       <div class="form-group small">
         <label for="contact-number">Phone Number</label>
-        <input type="tel" id="contact-number" placeholder="(555) 555-5555" required>
+        <input type="tel" id="contact-number" placeholder="" required>
         <div class="error-message" id="number-error">Please enter a valid phone number</div>
       </div>
     </div>
@@ -104,7 +131,7 @@
     <div class="form-row name-row">
       <div class="form-group small">
         <label for="name">Name</label>
-        <input type="text" id="name" placeholder="Enter Full Name" required>
+        <input type="text" id="name" placeholder="" required>
         <div class="error-message" id="name-error">Please enter your name</div>
       </div>
     </div>
@@ -115,7 +142,7 @@
         <!-- Submit Button -->
 <div class="form-row button-row">
   <button type="submit" class="search-btn" id="get-offer-btn" disabled>
-    Get offer
+    Get Offer
   </button>
 </div>
 
@@ -186,7 +213,7 @@ fetch("header.html")
     }
     
 
-	// Add redirect functionality to the Get offer button
+	// Add redirect functionality to the Get Offer button
 document.getElementById('get-offer-btn').addEventListener('click', function() {
     window.location.href = 'offer.html';
 });
@@ -209,7 +236,7 @@ document.getElementById('get-offer-btn').addEventListener('click', function() {
     fetch("years.html")
       .then(response => response.text())
       .then(data => {
-        document.getElementById("year").innerHTML = '<option value="">Select Year</option>' + data;
+        document.getElementById("year").innerHTML = '<option value=""></option>' + data;
       })
       .catch(error => console.error("Error loading years:", error));
 
@@ -217,7 +244,7 @@ document.getElementById('get-offer-btn').addEventListener('click', function() {
     fetch("makes.html")
       .then(response => response.text())
       .then(data => {
-        document.getElementById("make").innerHTML = '<option value="">Select Make</option>' + data;
+        document.getElementById("make").innerHTML = '<option value=""></option>' + data;
         // Set up model dropdown functionality after makes are loaded
         setupModelDropdown();
       })
@@ -234,7 +261,7 @@ function setupModelDropdown() {
   // Function to populate models based on selected make
   function populateModels(selectedMake) {
     // Clear existing options except the first one
-    modelSelect.innerHTML = '<option value="">Select Model</option>';
+    modelSelect.innerHTML = '<option value=""></option>';
     
     // Add models based on selected make
     if (modelData && modelData[selectedMake]) {
@@ -357,7 +384,7 @@ document.getElementById('vehicle-form').addEventListener('submit', function(e) {
         sessionStorage.setItem('vehicleBasicInfo', JSON.stringify(vehicleData));
         
         // Redirect to offer page
-        window.location.href = 'offer.html';
+        window.location.href = 'Offer.html';
     }
 });
 
@@ -409,7 +436,7 @@ function checkFormCompletion() {
         modelSelect.addEventListener('change', checkFormCompletion);
         locationInput.addEventListener('input', checkFormCompletion);
         
-        // Add click event to Get offer button
+        // Add click event to Get Offer button
         getOfferButton.addEventListener('click', function() {
             if (validateForm()) {
                 // If form is valid, redirect to 

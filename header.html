@@ -14,20 +14,7 @@
   
   
   
-  
-  
-  	     <!-- ✅ Google Analytics 4 Tracking Code -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZCWFYPMDQ"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-ZCWFEYPMD0');
-    </script>
-	
-	
-	
-  
+
   
   
   
@@ -57,18 +44,17 @@
         <a href="dashboard.html" id="dashboard-link" style="display: none;">Dashboard</a>
       </div>
 
-      <div class="auth-buttons">
-        <button class="sign-in" id="sign-in-btn" onclick="window.location.href='signin.html'">Sign In</button>
-        <div class="user-container" id="user-container" style="display: none;">
-          <i class="fas fa-user-circle user-icon"></i>
-          <span class="user-email" id="user-email"></span>
-          <div class="logout-container" id="logout-container">
-            <button class="logout-btn" id="logout-btn">
-              <i class="fas fa-sign-out-alt"></i> Log-out
-            </button>
-          </div>
-        </div>
-      </div>
+<div class="auth-buttons">
+  <div class="user-container" id="user-container" style="display: none;">
+    <i class="fas fa-user-circle user-icon"></i>
+    <span class="user-email" id="user-email"></span>
+    <div class="logout-container" id="logout-container">
+      <button class="logout-btn" id="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> Log-out
+      </button>
+    </div>
+  </div>
+</div>
 
     </div>
   </div>

@@ -1,41 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JUNKIFI - Professional Salvage Yard Marketplace</title>
+
+    <title>Junkifi - Junk Car Buyers Near Me | Terre Haute Junk Car Buyers</title>
+    <meta name="description" content="Looking for junk car buyers near me or near Terre Haute? Junkifi pays top cash for junk cars, offers free towing, and hassle-free junk car removal.">
+    <meta name="keywords" content="junk car buyers near me, junk car buyers near Terre Haute, who picks up junk cars for cash, cash for junk cars, sell junk car fast, junk car removal">
+    <meta property="og:title" content="Junkifi - Junk Car Buyers Near Me | Terre Haute Junk Car Buyers">
+    <meta property="og:description" content="Who picks up junk cars for cash? Junkifi does! Get instant cash, free towing, and fast junk car removal near Terre Haute and nationwide.">
+    <meta property="og:image" content="https://junkifi.com/logo.png">
+    <meta property="og:url" content="https://junkifi.com/">
+    <meta property="og:type" content="website">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="index.css">
 
-    <!-- Add Firebase SDKs FIRST -->
+    <!-- ✅ Structured Data (Schema Markup for Local Business) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "AutoDealer",
+      "name": "Junkifi",
+      "url": "https://junkifi.com",
+      "logo": "https://junkifi.com/logo.png",
+      "description": "Junkifi offers instant cash for junk cars, free towing, and fast junk car removal near you.",
+      "telephone": "+1-812-223-5722",
+      "areaServed": {
+        "@type": "Place",
+        "name": "Terre Haute, Indiana"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "123 Example St",
+        "addressLocality": "Terre Haute",
+        "addressRegion": "IN",
+        "postalCode": "47802",
+        "addressCountry": "US"
+      },
+      "openingHours": "Mo,Tu,We,Th,Fr,Sa,Su 00:00-23:59",
+      "sameAs": [
+        "https://www.facebook.com/YourPage",
+        "https://www.instagram.com/YourPage"
+      ]
+    }
+    </script>
+
+    <!-- ✅ Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZCWFYPMDQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ZCWFEYPMD0');
+    </script>
+
+    <!-- ✅ Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
-    <!-- Then load your scripts that depend on Firebase -->
+    <!-- ✅ Your Scripts -->
     <script src="modelData.js"></script>
-	<script src="auth-manager.js"></script>
-	
-	
-
-	
-	
-
+    <script src="auth-manager.js"></script>
 </head>
+
+
 <body>
 
 <!-- Header Placeholder -->
 <div id="header-placeholder"></div>
 
+
+  <!-- ✅ Trustpilot Rating moved inside hero 
+    <div class="trustpilot-rating">
+      <span class="stars">
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star-half-alt"></i>
+      </span>
+      <span class="rating-text">4.7 stars based on 55,000 Trustpilot reviews</span>
+    </div>
+
+-->
+
+
+
+
+
+
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <h1>Sell Your Car the Easy Way</h1>
-            <p>Guaranteed. Simple. Trusted.</p>
+             <h1>WE BUY JUNK CARS</h1>
+    <p>Get a legit offer in minutes-with free pickup, and payment on the spot.</p>
             
             <button class="list-vehicle-btn" id="list-vehicle-btn" style="display: none;">
                 <i class="fas fa-plus"></i> List a Vehicle
             </button>
             
+			
+			
 <div class="search-form">
   <form id="vehicle-form">
     
@@ -70,7 +137,7 @@
 
       <div class="form-group small">
         <label for="location">Car Zip Code</label>
-        <input type="text" id="location" placeholder="Car Zip Code" required>
+        <input type="text" id="location" placeholder="" required>
         <div class="error-message" id="location-error">Please enter a zip code</div>
       </div>
     </div>
@@ -79,13 +146,13 @@
     <div class="form-row">
       <div class="form-group small">
         <label for="email">Email</label>
-        <input type="text" id="email" placeholder="Enter Email" required>
+        <input type="text" id="email" placeholder="" required>
         <div class="error-message" id="email-error">Please enter an Email</div>
       </div>
 
       <div class="form-group small">
         <label for="contact-number">Phone Number</label>
-        <input type="tel" id="contact-number" placeholder="(555) 555-5555" required>
+        <input type="tel" id="contact-number" placeholder="" required>
         <div class="error-message" id="number-error">Please enter a valid phone number</div>
       </div>
     </div>
@@ -94,7 +161,7 @@
     <div class="form-row name-row">
       <div class="form-group small">
         <label for="name">Name</label>
-        <input type="text" id="name" placeholder="Enter Full Name" required>
+        <input type="text" id="name" placeholder="" required>
         <div class="error-message" id="name-error">Please enter your name</div>
       </div>
     </div>
@@ -105,7 +172,7 @@
         <!-- Submit Button -->
 <div class="form-row button-row">
   <button type="submit" class="search-btn" id="get-offer-btn" disabled>
-    Get Offer
+    GET AN INSTANT OFFER
   </button>
 </div>
 
@@ -149,8 +216,7 @@
 
     <script>
 	
-	
-	
+
 	
 fetch("header.html")
   .then(res => res.text())
@@ -176,6 +242,15 @@ fetch("header.html")
     }
     
 
+
+
+
+
+
+
+
+
+
 	// Add redirect functionality to the Get Offer button
 document.getElementById('get-offer-btn').addEventListener('click', function() {
     window.location.href = 'offer.html';
@@ -183,7 +258,7 @@ document.getElementById('get-offer-btn').addEventListener('click', function() {
 	
     
 	
-	
+
 	
 	
 	
@@ -199,7 +274,7 @@ document.getElementById('get-offer-btn').addEventListener('click', function() {
     fetch("years.html")
       .then(response => response.text())
       .then(data => {
-        document.getElementById("year").innerHTML = '<option value="">Select Year</option>' + data;
+        document.getElementById("year").innerHTML = '<option value=""></option>' + data;
       })
       .catch(error => console.error("Error loading years:", error));
 
@@ -207,7 +282,7 @@ document.getElementById('get-offer-btn').addEventListener('click', function() {
     fetch("makes.html")
       .then(response => response.text())
       .then(data => {
-        document.getElementById("make").innerHTML = '<option value="">Select Make</option>' + data;
+        document.getElementById("make").innerHTML = '<option value=""></option>' + data;
         // Set up model dropdown functionality after makes are loaded
         setupModelDropdown();
       })
@@ -224,7 +299,7 @@ function setupModelDropdown() {
   // Function to populate models based on selected make
   function populateModels(selectedMake) {
     // Clear existing options except the first one
-    modelSelect.innerHTML = '<option value="">Select Model</option>';
+    modelSelect.innerHTML = '<option value=""></option>';
     
     // Add models based on selected make
     if (modelData && modelData[selectedMake]) {

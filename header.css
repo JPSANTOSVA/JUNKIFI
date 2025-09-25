@@ -62,9 +62,23 @@ header {
   color: white;
   text-decoration: none;
   text-transform: uppercase;
-  text-shadow: 2px 3px 3px rgba(0, 0, 0, 0.5);
-  transform: scaleX(2) skewX(-5deg); /* keeps your skew effect */
+  text-shadow: 
+    2px 2px 0 black,
+   -2px -2px 0 black,
+    2px -2px 0 black,
+   -2px  2px 0 black,
+    2px 0 0 black,
+   -2px 0 0 black,
+    0 2px 0 black,
+    0 -2px 0 black; /* ✅ strong black outline */
+  transform: scaleX(2) skewX(-5deg);
   display: block;
+  margin-top: 8px;  /* ⬅️ moves it down */
+}
+
+/* Add to header.css */
+.auth-buttons.hidden {
+  display: none !important;
 }
 
 /* Nav links container */
@@ -148,7 +162,7 @@ header {
 
 /* User info container */
 .user-container {
-  display: flex;
+  display: none;
   align-items: center;
   gap: 10px;
   margin-left: 15px;
@@ -157,7 +171,13 @@ header {
   border-radius: 5px;
   transition: background-color 0.3s;
   position: relative;
+  cursor: pointer;
 }
+
+.user-container.visible {
+  display: flex;
+}
+
 
 .user-container:hover {
   background-color: rgba(255, 255, 255, 0.1);
@@ -246,16 +266,18 @@ header {
     justify-content: center;
     gap: 8px;         /* spacing between truck and JUNKIFI */
     flex: 1;          /* take available space */
+	margin-right: 65px; /* small spacing between truck and text */
   }
 
   .truck-img {
-    height: 50px;     /* adjust truck size for mobile */
+    height: 60px;     /* adjust truck size for mobile */
     display: inline-block;
+	margin-right: 40px; /* small spacing between truck and text */
   }
 
   .logo {
-    font-size: 30px;  
-    transform: scaleX(1.8) skewX(-5deg);
+    font-size: 40px;  
+    transform: scaleX(2.5) skewX(-5deg);
     text-align: center;
     display: inline-block;
   }
