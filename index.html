@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="index.css">
 
-    <!-- ✅ Structured Data (Schema Markup for Local Business) -->
+    <!-- ✅ Structured Data (Enhanced Schema Markup for Local Business) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -42,7 +42,26 @@
       "sameAs": [
         "https://www.facebook.com/YourPage",
         "https://www.instagram.com/YourPage"
-      ]
+      ],
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "39.4667",
+        "longitude": "-87.4139"
+      },
+      "makesOffer": {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Cash for Junk Cars",
+          "description": "We buy junk cars in Terre Haute and nearby areas. Free towing, instant offer, and cash payment."
+        }
+      },
+      "hasMap": "https://www.google.com/maps/place/YourBusinessLink",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "127"
+      }
     }
     </script>
 
@@ -64,6 +83,7 @@
     <script src="modelData.js"></script>
     <script src="auth-manager.js"></script>
 </head>
+
 
 
 <body>
@@ -422,7 +442,7 @@ document.getElementById('vehicle-form').addEventListener('submit', function(e) {
         sessionStorage.setItem('vehicleBasicInfo', JSON.stringify(vehicleData));
         
         // Redirect to offer page
-        window.location.href = 'Offer.html';
+        window.location.href = 'offer.html';
     }
 });
 
@@ -474,7 +494,7 @@ function checkFormCompletion() {
         modelSelect.addEventListener('change', checkFormCompletion);
         locationInput.addEventListener('input', checkFormCompletion);
         
-        // Add click event to Get Offer button
+        // Add click event to Get offer button
         getOfferButton.addEventListener('click', function() {
             if (validateForm()) {
                 // If form is valid, redirect to 
