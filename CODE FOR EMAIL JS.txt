@@ -1,0 +1,91 @@
+<div style="font-family: Arial, sans-serif; font-size: 14px; line-height: 1.5; color: #333;">
+  <h2 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;">
+    New Vehicle Submission Received
+  </h2>
+  
+  <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+    <h3 style="color: #2c3e50; margin-top: 0;">Vehicle Details</h3>
+    <table style="width: 100%;">
+      <tr>
+        <td style="padding: 5px 0; width: 100px;"><strong>Year:</strong></td>
+        <td style="padding: 5px 0;">{{year}}</td>
+      </tr>
+      <tr>
+        <td style="padding: 5px 0;"><strong>Make:</strong></td>
+        <td style="padding: 5px 0;">{{make}}</td>
+      </tr>
+      <tr>
+        <td style="padding: 5px 0;"><strong>Model:</strong></td>
+        <td style="padding: 5px 0;">{{model}}</td>
+      </tr>
+    </table>
+  </div>
+
+  <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+    <h3 style="color: #2c3e50; margin-top: 0;">Contact Information</h3>
+    <table style="width: 100%;">
+      <tr>
+        <td style="padding: 5px 0; width: 100px;"><strong>Email:</strong></td>
+        <td style="padding: 5px 0;">{{user_email}}</td>
+      </tr>
+      <tr>
+        <td style="padding: 5px 0;"><strong>Location:</strong></td>
+        <td style="padding: 5px 0;">{{location}}</td>
+      </tr>
+      <tr>
+        <td style="padding: 5px 0;"><strong>Phone:</strong></td>
+        <td style="padding: 5px 0;">{{contact_number}}</td>
+      </tr>
+    </table>
+  </div>
+
+  <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+    <h3 style="color: #2c3e50; margin-top: 0;">Vehicle Condition</h3>
+    <table style="width: 100%;">
+      <tr>
+        <td style="padding: 5px 0; width: 150px;"><strong>Mileage:</strong></td>
+        <td style="padding: 5px 0;">{{mileage}}</td>
+      </tr>
+      <tr>
+        <td style="padding: 5px 0;"><strong>Title Status:</strong></td>
+        <td style="padding: 5px 0;">{{title_status}}</td>
+      </tr>
+      <tr>
+        <td style="padding: 5px 0;"><strong>Engine Condition:</strong></td>
+        <td style="padding: 5px 0;">{{engine_condition}}</td>
+      </tr>
+      <tr>
+        <td style="padding: 5px 0;"><strong>Interior Condition:</strong></td>
+        <td style="padding: 5px 0;">{{interior_condition}}</td>
+      </tr>
+      <tr>
+        <td style="padding: 5px 0;"><strong>Tire Condition:</strong></td>
+        <td style="padding: 5px 0;">{{tire_condition}}</td>
+      </tr>
+    </table>
+  </div>
+
+  <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+    <h3 style="color: #2c3e50; margin-top: 0;">Damage Assessment</h3>
+    <table style="width: 100%;">
+      <tr>
+        <td style="padding: 5px 0; width: 150px; vertical-align: top;"><strong>Body Damage:</strong></td>
+        <td style="padding: 5px 0;">{{body_damage}}</td>
+      </tr>
+      <tr>
+        <td style="padding: 5px 0; vertical-align: top;"><strong>Major Damage:</strong></td>
+        <td style="padding: 5px 0;">{{major_damage}}</td>
+      </tr>
+      <tr>
+        <td style="padding: 5px 0; vertical-align: top;"><strong>Missing Parts:</strong></td>
+        <td style="padding: 5px 0;">{{missing_parts}}</td>
+      </tr>
+    </table>
+  </div>
+
+  <div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed #ccc;">
+    <p style="margin: 0; color: #666; font-size: 12px;">
+      <strong>Submitted on:</strong> {{submission_date}}
+    </p>
+  </div>
+</div>

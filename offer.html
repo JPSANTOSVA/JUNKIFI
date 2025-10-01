@@ -13,6 +13,8 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
 	
+    <!-- ADD THIS: EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 	
 <script src="auth-manager.js"></script>
 </head>
@@ -251,7 +253,7 @@
             <!-- Form Navigation -->
             <div class="form-navigation">
                 <button type="button" class="nav-button previous">Previous</button>
-                <button type="button" class="nav-button next" id="calculateBtn">Calculate Deductions</button>
+                <button type="button" class="nav-button next" id="calculateBtn">Confirm & Proceed</button>
                 <button type="button" class="nav-button next" id="getOfferBtn" style="display:none;">Get Your Offer</button>
             </div>
         </form>
@@ -307,254 +309,327 @@
     <!-- Footer (loaded from footer.html) -->
     <div id="footer-placeholder"></div>
  
-    <script>
-        // Load header first
-        fetch("header.html")
-            .then(res => res.text())
-            .then(data => {
-                const headerPlaceholder = document.getElementById("header-placeholder");
-                headerPlaceholder.innerHTML = data;
+  <script>
+    // Initialize EmailJS with your Service ID
+    emailjs.init("KW5aPtjgKsmJ4yaX8");
 
-                // Process scripts from header
-                const scripts = headerPlaceholder.querySelectorAll("script");
-                scripts.forEach(oldScript => {
-                    const newScript = document.createElement("script");
-                    if (oldScript.src) {
-                        newScript.src = oldScript.src;
-                    } else {
-                        newScript.textContent = oldScript.textContent;
-                    }
-                    document.body.appendChild(newScript);
-                });
-            })
-            .catch(error => console.error("Error loading header:", error));
+    // Load header first
+    fetch("header.html")
+        .then(res => res.text())
+        .then(data => {
+            const headerPlaceholder = document.getElementById("header-placeholder");
+            headerPlaceholder.innerHTML = data;
 
-        // Load footer
-        fetch("footer.html")
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById("footer-placeholder").innerHTML = data;
+            // Process scripts from header
+            const scripts = headerPlaceholder.querySelectorAll("script");
+            scripts.forEach(oldScript => {
+                const newScript = document.createElement("script");
+                if (oldScript.src) {
+                    newScript.src = oldScript.src;
+                } else {
+                    newScript.textContent = oldScript.textContent;
+                }
+                document.body.appendChild(newScript);
             });
+        })
+        .catch(error => console.error("Error loading header:", error));
 
-        // Navigation buttons
-        const prevButton = document.querySelector('.nav-button.previous');
-        const calculateBtn = document.getElementById('calculateBtn');
-        const getOfferBtn = document.getElementById('getOfferBtn');
-        const vehicleForm = document.getElementById('vehicleForm');
-        const endMessageSection = document.getElementById('endMessageSection');
-        const callLaterBtn = document.getElementById('callLaterBtn');
+    // Load footer
+    fetch("footer.html")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("footer-placeholder").innerHTML = data;
+        });
+
+    // Navigation buttons
+    const prevButton = document.querySelector('.nav-button.previous');
+    const calculateBtn = document.getElementById('calculateBtn');
+    const getOfferBtn = document.getElementById('getOfferBtn');
+    const vehicleForm = document.getElementById('vehicleForm');
+    const endMessageSection = document.getElementById('endMessageSection');
+    const callLaterBtn = document.getElementById('callLaterBtn');
+    
+    // Required fields
+    const requiredFields = [
+       'mileage', 'title-status', 'engine-condition'
+    ];
+    
+    // Add change events to required fields for validation
+    requiredFields.forEach(field => {
+        const element = document.getElementById(field);
+        if (element) {
+            element.addEventListener('change', function() {
+                validateField(this);
+                updateGetOfferButton();
+            });
+        }
+    });
+    
+    document.getElementById('mileage').addEventListener('input', function() {
+        validateField(this);
+        updateGetOfferButton();
+    });
+    
+    prevButton.addEventListener('click', function() {
+        alert('Would navigate to previous step in the form.');
+    });
+    
+    // FIX 3: Update this button click handler to call the email function
+    calculateBtn.addEventListener('click', function() {
+        // Validate all required fields
+        let isValid = true;
         
-        // Required fields
-        const requiredFields = [
-           'mileage', 'title-status', 'engine-condition'
-        ];
-        
-        // Add change events to required fields for validation
         requiredFields.forEach(field => {
             const element = document.getElementById(field);
-            if (element) {
-                element.addEventListener('change', function() {
-                    validateField(this);
-                    updateGetOfferButton();
+            if (element && !validateField(element)) {
+                isValid = false;
+            }
+        });
+        
+        if (!isValid) {
+            alert('Please fill in all required fields correctly.');
+            return;
+        }
+        
+        // Save data to Firebase
+        saveVehicleToFirebase();
+        
+        // ADD THIS: Send email notification
+        sendVehicleDataEmail();
+        
+        // Hide form and show end message
+        vehicleForm.style.display = 'none';
+        endMessageSection.style.display = 'block';
+        
+        // Scroll to top of end message
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Call later button functionality
+    callLaterBtn.addEventListener('click', function() {
+        alert('We will call you later. Please make sure your contact information is up to date.');
+    });
+    
+    // Function to validate a field
+    function validateField(field) {
+        const errorElement = document.getElementById(`${field.id}-error`);
+        
+        if (!field.value.trim()) {
+            field.classList.add('error');
+            errorElement.style.display = 'block';
+            return false;
+        } else {
+            field.classList.remove('error');
+            errorElement.style.display = 'none';
+            
+            // Additional validation for specific fields
+            if (field.id === 'vin' && field.value.length !== 17) {
+                field.classList.add('error');
+                errorElement.textContent = 'VIN must be 17 characters';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            if (field.id === 'mileage' && (field.value < 0 || field.value > 1000000)) {
+                field.classList.add('error');
+                errorElement.textContent = 'Please enter a valid mileage';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            return true;
+        }
+    }
+    
+    // Function to update Get Offer button state
+    function updateGetOfferButton() {
+        let allValid = true;
+        
+        requiredFields.forEach(field => {
+            const element = document.getElementById(field);
+            if (element && !element.value.trim()) {
+                allValid = false;
+            }
+            
+            if (field === 'mileage' && (element.value < 0 || element.value > 1000000)) {
+                allValid = false;
+            }
+        });
+        
+        getOfferBtn.disabled = !allValid;
+    }
+
+    // Retrieve vehicle basic info from localStorage/sessionStorage
+    function getStoredVehicleData() {
+        let vehicleData = null;
+
+        if (sessionStorage.getItem('vehicleBasicInfo')) {
+            vehicleData = JSON.parse(sessionStorage.getItem('vehicleBasicInfo'));
+        } else if (localStorage.getItem('vehicleOfferData')) {
+            vehicleData = JSON.parse(localStorage.getItem('vehicleOfferData'));
+        }
+
+        return vehicleData || {};
+    }
+
+    function saveVehicleToFirebase() {
+        let userId = 'anonymous';
+        let userEmail = 'anonymous@example.com';
+
+        // Get stored data from index.html
+        const basicData = getStoredVehicleData();
+
+        AuthManager.checkAuthState().then((isAuthenticated) => {
+            if (isAuthenticated && AuthManager.auth.currentUser) {
+                const user = AuthManager.auth.currentUser;
+                userId = user.uid;
+                userEmail = user.email;
+            } else {
+                if (!sessionStorage.getItem('anonymousUserId')) {
+                    sessionStorage.setItem('anonymousUserId', 'anon_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9));
+                }
+                userId = sessionStorage.getItem('anonymousUserId');
+            }
+
+            // Merge stored basic info with offer.html form data
+            const formData = {
+                ...basicData,  // includes year, make, model, email, location, contactNumber
+                userId: userId,
+                userEmail: userEmail,
+                mileage: document.getElementById('mileage').value,
+                titleStatus: document.getElementById('title-status').value,
+                engineCondition: document.getElementById('engine-condition').value,
+                interiorCondition: document.getElementById('interior-condition').value,
+                tireCondition: document.getElementById('tire-condition').value,
+                bodyDamage: getCheckedDamage('front-bumper', 'rear-bumper', 'hood', 'roof', 
+                                            'door', 'fender', 'quarter-panel', 'windshield',
+                                            'side-windows', 'rear-window', 'paint', 'rust', 'dents'),
+                majorDamage: getCheckedDamage('accident', 'flood', 'fire'),
+                missingParts: getCheckedDamage('engine', 'transmission', 'wheels', 'battery', 
+                                             'catalytic', 'seats', 'steering', 'airbags', 
+                                             'radio', 'mirrors', 'lights', 'doors', 'hood-missing', 'trunk'),
+                submissionDate: new Date().toISOString(),
+                status: 'submitted',
+                isAnonymous: !isAuthenticated
+            };
+
+            // Save everything to Firestore
+            firebase.firestore().collection("vehicleSubmissions").add(formData)
+                .then((docRef) => {
+                    console.log("Vehicle data saved with ID: ", docRef.id);
+                    if (!isAuthenticated) {
+                        sessionStorage.setItem('lastSubmissionId', docRef.id);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error saving vehicle data: ", error);
+                });
+        });
+    }
+
+    // FIX 4: Add the missing helper function
+    function getCheckedDamageDescriptions(...ids) {
+        const damageItems = [];
+        ids.forEach(id => {
+            const checkbox = document.getElementById(id);
+            if (checkbox && checkbox.checked) {
+                damageItems.push(checkbox.nextElementSibling?.textContent || id);
+            }
+        });
+        return damageItems;
+    }
+
+   function sendVehicleDataEmail() {
+    // Get stored basic vehicle data
+    const basicData = getStoredVehicleData();
+    
+    // Get current form data
+    const formData = {
+        // Basic vehicle info
+        year: basicData.year || 'Not provided',
+        make: basicData.make || 'Not provided',
+        model: basicData.model || 'Not provided',
+        name: basicData.name || 'Not provided', // ADD THIS LINE
+        email: basicData.email || 'Not provided',
+        location: basicData.location || 'Not provided',
+        contactNumber: basicData.contactNumber || 'Not provided',
+        
+        // Vehicle condition info
+        mileage: document.getElementById('mileage').value,
+        titleStatus: document.getElementById('title-status').value,
+        engineCondition: document.getElementById('engine-condition').value,
+        interiorCondition: document.getElementById('interior-condition').value,
+        tireCondition: document.getElementById('tire-condition').value,
+        
+        // Damage information
+        bodyDamage: getCheckedDamageDescriptions('front-bumper', 'rear-bumper', 'hood', 'roof', 
+                                               'door', 'fender', 'quarter-panel', 'windshield',
+                                               'side-windows', 'rear-window', 'paint', 'rust', 'dents'),
+        majorDamage: getCheckedDamageDescriptions('accident', 'flood', 'fire'),
+        missingParts: getCheckedDamageDescriptions('engine', 'transmission', 'wheels', 'battery', 
+                                                 'catalytic', 'seats', 'steering', 'airbags', 
+                                                 'radio', 'mirrors', 'lights', 'doors', 'hood-missing', 'trunk'),
+        
+        submissionDate: new Date().toLocaleString(),
+        userEmail: basicData.email || 'anonymous@example.com'
+    };
+
+    // Prepare email template parameters
+    const templateParams = {
+        to_email: 'junkifidev@gmail.com', // Your email address
+        from_name: 'JUNKIFI Website',
+        subject: `New Vehicle Submission - ${formData.year} ${formData.make} ${formData.model}`,
+        
+        // Email content - these match your template variables
+        year: formData.year,
+        make: formData.make,
+        model: formData.model,
+        name: formData.name, // ADD THIS LINE
+        user_email: formData.email,
+        location: formData.location,
+        contact_number: formData.contactNumber,
+        mileage: formData.mileage,
+        title_status: formData.titleStatus,
+        engine_condition: formData.engineCondition,
+        interior_condition: formData.interiorCondition,
+        tire_condition: formData.tireCondition,
+        body_damage: formData.bodyDamage.length > 0 ? formData.bodyDamage.join(', ') : 'None',
+        major_damage: formData.majorDamage.length > 0 ? formData.majorDamage.join(', ') : 'None',
+        missing_parts: formData.missingParts.length > 0 ? formData.missingParts.join(', ') : 'None',
+        submission_date: formData.submissionDate
+    };
+
+    // Send email using EmailJS
+    emailjs.send('service_ivm6r1h', 'template_vjzq9dw', templateParams)
+        .then(function(response) {
+            console.log('Email sent successfully!', response.status, response.text);
+            // Optional: Show success message to user
+            alert('Your vehicle information has been submitted successfully! We will contact you soon.');
+        }, function(error) {
+            console.error('Failed to send email:', error);
+            // Optional: Show error message to user
+            alert('There was an issue submitting your information. Please try again or contact us directly.');
+        });
+}
+
+    // Helper function to get checked damage items
+    function getCheckedDamage(...ids) {
+        const damageItems = [];
+        ids.forEach(id => {
+            const checkbox = document.getElementById(id);
+            if (checkbox && checkbox.checked) {
+                damageItems.push({
+                    part: id,
+                    description: checkbox.nextElementSibling?.textContent || id
                 });
             }
         });
-        
-        document.getElementById('mileage').addEventListener('input', function() {
-            validateField(this);
-            updateGetOfferButton();
-        });
-        
-        prevButton.addEventListener('click', function() {
-            alert('Would navigate to previous step in the form.');
-        });
-        
-        // Show end message when Calculate button is clicked
-        calculateBtn.addEventListener('click', function() {
-            // Validate all required fields
-            let isValid = true;
-            
-            requiredFields.forEach(field => {
-                const element = document.getElementById(field);
-                if (element && !validateField(element)) {
-                    isValid = false;
-                }
-            });
-            
-            if (!isValid) {
-                alert('Please fill in all required fields correctly.');
-                return;
-            }
-            
-            // Save data to Firebase
-            saveVehicleToFirebase();
-            
-            // Hide form and show end message
-            vehicleForm.style.display = 'none';
-            endMessageSection.style.display = 'block';
-            
-            // Scroll to top of end message
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-        // Call later button functionality
-        callLaterBtn.addEventListener('click', function() {
-            alert('We will call you later. Please make sure your contact information is up to date.');
-        });
-        
-        // Function to validate a field
-        function validateField(field) {
-            const errorElement = document.getElementById(`${field.id}-error`);
-            
-            if (!field.value.trim()) {
-                field.classList.add('error');
-                errorElement.style.display = 'block';
-                return false;
-            } else {
-                field.classList.remove('error');
-                errorElement.style.display = 'none';
-                
-                // Additional validation for specific fields
-                if (field.id === 'vin' && field.value.length !== 17) {
-                    field.classList.add('error');
-                    errorElement.textContent = 'VIN must be 17 characters';
-                    errorElement.style.display = 'block';
-                    return false;
-                }
-                
-                if (field.id === 'mileage' && (field.value < 0 || field.value > 1000000)) {
-                    field.classList.add('error');
-                    errorElement.textContent = 'Please enter a valid mileage';
-                    errorElement.style.display = 'block';
-                    return false;
-                }
-                
-                return true;
-            }
-        }
-        
-        // Function to update Get Offer button state
-        function updateGetOfferButton() {
-            let allValid = true;
-            
-            requiredFields.forEach(field => {
-                const element = document.getElementById(field);
-                if (element && !element.value.trim()) {
-                    allValid = false;
-                }
-                
-                if (field === 'mileage' && (element.value < 0 || element.value > 1000000)) {
-                    allValid = false;
-                }
-            });
-            
-            getOfferBtn.disabled = !allValid;
-        }
-		
-		
-// Retrieve vehicle basic info from localStorage/sessionStorage
-function getStoredVehicleData() {
-    let vehicleData = null;
-
-    if (sessionStorage.getItem('vehicleBasicInfo')) {
-        vehicleData = JSON.parse(sessionStorage.getItem('vehicleBasicInfo'));
-    } else if (localStorage.getItem('vehicleOfferData')) {
-        vehicleData = JSON.parse(localStorage.getItem('vehicleOfferData'));
+        return damageItems;
     }
-
-    return vehicleData || {};
-}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	function saveVehicleToFirebase() {
-    let userId = 'anonymous';
-    let userEmail = 'anonymous@example.com';
-
-    // Get stored data from index.html
-    const basicData = getStoredVehicleData();
-
-    AuthManager.checkAuthState().then((isAuthenticated) => {
-        if (isAuthenticated && AuthManager.auth.currentUser) {
-            const user = AuthManager.auth.currentUser;
-            userId = user.uid;
-            userEmail = user.email;
-        } else {
-            if (!sessionStorage.getItem('anonymousUserId')) {
-                sessionStorage.setItem('anonymousUserId', 'anon_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9));
-            }
-            userId = sessionStorage.getItem('anonymousUserId');
-        }
-
-        // Merge stored basic info with offer.html form data
-        const formData = {
-            ...basicData,  // includes year, make, model, email, location, contactNumber
-            userId: userId,
-            userEmail: userEmail,
-            mileage: document.getElementById('mileage').value,
-            titleStatus: document.getElementById('title-status').value,
-            engineCondition: document.getElementById('engine-condition').value,
-            interiorCondition: document.getElementById('interior-condition').value,
-            tireCondition: document.getElementById('tire-condition').value,
-            bodyDamage: getCheckedDamage('front-bumper', 'rear-bumper', 'hood', 'roof', 
-                                        'door', 'fender', 'quarter-panel', 'windshield',
-                                        'side-windows', 'rear-window', 'paint', 'rust', 'dents'),
-            majorDamage: getCheckedDamage('accident', 'flood', 'fire'),
-            missingParts: getCheckedDamage('engine', 'transmission', 'wheels', 'battery', 
-                                         'catalytic', 'seats', 'steering', 'airbags', 
-                                         'radio', 'mirrors', 'lights', 'doors', 'hood-missing', 'trunk'),
-            submissionDate: new Date().toISOString(),
-            status: 'submitted',
-            isAnonymous: !isAuthenticated
-        };
-
-        // Save everything to Firestore
-        firebase.firestore().collection("vehicleSubmissions").add(formData)
-            .then((docRef) => {
-                console.log("Vehicle data saved with ID: ", docRef.id);
-                if (!isAuthenticated) {
-                    sessionStorage.setItem('lastSubmissionId', docRef.id);
-                }
-            })
-            .catch((error) => {
-                console.error("Error saving vehicle data: ", error);
-            });
-    });
-}
-
-
-        // Helper function to get checked damage items
-        function getCheckedDamage(...ids) {
-            const damageItems = [];
-            ids.forEach(id => {
-                const checkbox = document.getElementById(id);
-                if (checkbox && checkbox.checked) {
-                    damageItems.push({
-                        part: id,
-                        description: checkbox.nextElementSibling?.textContent || id
-                    });
-                }
-            });
-            return damageItems;
-        }
-        
-        // Initialize button state
-        updateGetOfferButton();
-    </script>
+    
+    // Initialize button state
+    updateGetOfferButton();
+</script>
     
 
 </body>

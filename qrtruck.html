@@ -196,272 +196,328 @@
     <!-- Footer (loaded from footer.html) -->
     <div id="footer-placeholder"></div>
 
-    <script>
-	
-	
-	
-	
-fetch("header.html")
-  .then(res => res.text())
-  .then(data => {
-    const headerPlaceholder = document.getElementById("header-placeholder");
-    headerPlaceholder.innerHTML = data;
+  <script>
+    // Initialize EmailJS with your Service ID
+    emailjs.init("KW5aPtjgKsmJ4yaX8");
 
-    // Run any <script> tags from header.html
-    const scripts = headerPlaceholder.querySelectorAll("script");
-    scripts.forEach(oldScript => {
-      const newScript = document.createElement("script");
-      if (oldScript.src) {
-        newScript.src = oldScript.src;
-      } else {
-        newScript.textContent = oldScript.textContent;
-      }
-      document.body.appendChild(newScript);
+    // Load header first
+    fetch("header.html")
+        .then(res => res.text())
+        .then(data => {
+            const headerPlaceholder = document.getElementById("header-placeholder");
+            headerPlaceholder.innerHTML = data;
+
+            // Process scripts from header
+            const scripts = headerPlaceholder.querySelectorAll("script");
+            scripts.forEach(oldScript => {
+                const newScript = document.createElement("script");
+                if (oldScript.src) {
+                    newScript.src = oldScript.src;
+                } else {
+                    newScript.textContent = oldScript.textContent;
+                }
+                document.body.appendChild(newScript);
+            });
+        })
+        .catch(error => console.error("Error loading header:", error));
+
+    // Load footer
+    fetch("footer.html")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("footer-placeholder").innerHTML = data;
+        });
+
+    // Navigation buttons
+    const prevButton = document.querySelector('.nav-button.previous');
+    const calculateBtn = document.getElementById('calculateBtn');
+    const getOfferBtn = document.getElementById('getOfferBtn');
+    const vehicleForm = document.getElementById('vehicleForm');
+    const endMessageSection = document.getElementById('endMessageSection');
+    const callLaterBtn = document.getElementById('callLaterBtn');
+    
+    // Required fields
+    const requiredFields = [
+       'mileage', 'title-status', 'engine-condition'
+    ];
+    
+    // Add change events to required fields for validation
+    requiredFields.forEach(field => {
+        const element = document.getElementById(field);
+        if (element) {
+            element.addEventListener('change', function() {
+                validateField(this);
+                updateGetOfferButton();
+            });
+        }
     });
     
-    // Initialize auth after header is loaded
-    if (typeof AuthManager !== 'undefined') {
-      AuthManager.checkAuthState();
-    }
+    document.getElementById('mileage').addEventListener('input', function() {
+        validateField(this);
+        updateGetOfferButton();
+    });
     
-
-	// Add redirect functionality to the Get Offer button
-document.getElementById('get-offer-btn').addEventListener('click', function() {
-    window.location.href = 'offer.html';
-});
-	
+    prevButton.addEventListener('click', function() {
+        alert('Would navigate to previous step in the form.');
+    });
     
-	
-	
-	
-	
-	
-	
-    // Load footer.html into placeholder
-    fetch("footer.html")
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById("footer-placeholder").innerHTML = data;
-      });
-    
-    // Load year options
-    fetch("years.html")
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById("year").innerHTML = '<option value=""></option>' + data;
-      })
-      .catch(error => console.error("Error loading years:", error));
-
-    // Load make options
-    fetch("makes.html")
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById("make").innerHTML = '<option value=""></option>' + data;
-        // Set up model dropdown functionality after makes are loaded
-        setupModelDropdown();
-      })
-      .catch(error => console.error("Error loading makes:", error));
-    
-  })
-  .catch(error => console.error("Error loading header:", error));
-
-// Function to set up model dropdown functionality
-function setupModelDropdown() {
-  const makeSelect = document.getElementById('make');
-  const modelSelect = document.getElementById('model');
-
-  // Function to populate models based on selected make
-  function populateModels(selectedMake) {
-    // Clear existing options except the first one
-    modelSelect.innerHTML = '<option value=""></option>';
-    
-    // Add models based on selected make
-    if (modelData && modelData[selectedMake]) {
-      modelData[selectedMake].forEach(model => {
-        const option = document.createElement('option');
-        option.value = model;
-        option.textContent = model;
-        modelSelect.appendChild(option);
-      });
-    }
-  }
-
-  // Event listener for make selection change
-  makeSelect.addEventListener('change', function() {
-    const selectedMake = this.value;
-    populateModels(selectedMake);
-  });
-
-  // Initialize with first make if available
-  if (makeSelect.options.length > 1) {
-    populateModels(makeSelect.options[1].value);
-  }
-}
-
-    // Get form elements
-        const yearSelect = document.getElementById('year');
-        const makeSelect = document.getElementById('make');
-        const modelSelect = document.getElementById('model');
-        const locationInput = document.getElementById('location');
-		const numberInput = document.getElementById('contact-number');
-        const getOfferButton = document.getElementById('get-offer-btn');
+    // FIX 3: Update this button click handler to call the email function
+    calculateBtn.addEventListener('click', function() {
+        // Validate all required fields
+        let isValid = true;
         
-        // Get error message elements
-        const yearError = document.getElementById('year-error');
-        const makeError = document.getElementById('make-error');
-        const modelError = document.getElementById('model-error');
-        const locationError = document.getElementById('location-error');
-		const numberError = document.getElementById('number-error');
-
-
-/// Update validateForm()
-function validateForm() {
-    let isValid = true;
-    const nameInput = document.getElementById('name'); // Get name input
-    const nameError = document.getElementById('name-error'); // Get name error
-
-    // Validate Year
-    if (!yearSelect.value) {
-        yearError.style.display = 'block';
-        isValid = false;
-    } else {
-        yearError.style.display = 'none';
-    }
-
-    // Validate Make
-    if (!makeSelect.value) {
-        makeError.style.display = 'block';
-        isValid = false;
-    } else {
-        makeError.style.display = 'none';
-    }
-
-    // Validate Model
-    if (!modelSelect.value) {
-        modelError.style.display = 'block';
-        isValid = false;
-    } else {
-        modelError.style.display = 'none';
-    }
-
-    // Validate Location
-    if (!locationInput.value.trim()) {
-        locationError.style.display = 'block';
-        isValid = false;
-    } else {
-        locationError.style.display = 'none';
-    }
-
-    // Validate Number
-    if (!numberInput.value.trim()) {
-        numberError.style.display = 'block';
-        isValid = false;
-    } else {
-        numberError.style.display = 'none';
-    }
-
-    // ✅ Validate Name
-    if (!nameInput.value.trim()) {
-        nameError.style.display = 'block';
-        isValid = false;
-    } else {
-        nameError.style.display = 'none';
-    }
-
-    return isValid;
-}
-
-
-
-
-// Add form submission handler
-document.getElementById('vehicle-form').addEventListener('submit', function(e) {
-    e.preventDefault(); // Prevent default form submission
-    
-    if (validateForm()) {
-        // Create an object with the form data (INCLUDING NAME)
-        const vehicleData = {
-            year: document.getElementById('year').value,
-            make: document.getElementById('make').value,
-            model: document.getElementById('model').value,
-            email: document.getElementById('email').value,
-            location: document.getElementById('location').value,
-            contactNumber: document.getElementById('contact-number').value,
-            name: document.getElementById('name').value, // ADD THIS LINE
-            timestamp: new Date().toISOString() // Add a timestamp
-        };
-        
-        // Save to local storage AND session storage for redundancy
-        localStorage.setItem('vehicleOfferData', JSON.stringify(vehicleData));
-        sessionStorage.setItem('vehicleBasicInfo', JSON.stringify(vehicleData));
-        
-        // Redirect to offer page
-        window.location.href = 'offer.html';
-    }
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Update checkFormCompletion()
-function checkFormCompletion() {
-    const nameInput = document.getElementById('name'); // Get name input
-    const isFilled = yearSelect.value && makeSelect.value &&
-                     modelSelect.value && locationInput.value.trim() &&
-                     numberInput.value.trim() && nameInput.value.trim(); // Add name check
-
-    getOfferButton.disabled = !isFilled;
-
-    if (isFilled) {
-        getOfferButton.style.cursor = 'pointer';
-        getOfferButton.title = 'Click to get your offer';
-    } else {
-        getOfferButton.style.cursor = 'not-allowed';
-        getOfferButton.title = 'Please fill all fields to get an offer';
-    }
-}
-
-		
-		document.getElementById('name').addEventListener('input', checkFormCompletion);
-		numberInput.addEventListener('input', checkFormCompletion);
-        yearSelect.addEventListener('change', checkFormCompletion);
-        makeSelect.addEventListener('change', checkFormCompletion);
-        modelSelect.addEventListener('change', checkFormCompletion);
-        locationInput.addEventListener('input', checkFormCompletion);
-        
-        // Add click event to Get Offer button
-        getOfferButton.addEventListener('click', function() {
-            if (validateForm()) {
-                // If form is valid, redirect to 
-                window.location.href = 'offer.html';
+        requiredFields.forEach(field => {
+            const element = document.getElementById(field);
+            if (element && !validateField(element)) {
+                isValid = false;
             }
         });
         
-        // Initialize form state
-        checkFormCompletion();
+        if (!isValid) {
+            alert('Please fill in all required fields correctly.');
+            return;
+        }
+        
+        // Save data to Firebase
+        saveVehicleToFirebase();
+        
+        // ADD THIS: Send email notification
+        sendVehicleDataEmail();
+        
+        // Hide form and show end message
+        vehicleForm.style.display = 'none';
+        endMessageSection.style.display = 'block';
+        
+        // Scroll to top of end message
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
 
+    // Call later button functionality
+    callLaterBtn.addEventListener('click', function() {
+        alert('We will call you later. Please make sure your contact information is up to date.');
+    });
+    
+    // Function to validate a field
+    function validateField(field) {
+        const errorElement = document.getElementById(`${field.id}-error`);
+        
+        if (!field.value.trim()) {
+            field.classList.add('error');
+            errorElement.style.display = 'block';
+            return false;
+        } else {
+            field.classList.remove('error');
+            errorElement.style.display = 'none';
+            
+            // Additional validation for specific fields
+            if (field.id === 'vin' && field.value.length !== 17) {
+                field.classList.add('error');
+                errorElement.textContent = 'VIN must be 17 characters';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            if (field.id === 'mileage' && (field.value < 0 || field.value > 1000000)) {
+                field.classList.add('error');
+                errorElement.textContent = 'Please enter a valid mileage';
+                errorElement.style.display = 'block';
+                return false;
+            }
+            
+            return true;
+        }
+    }
+    
+    // Function to update Get Offer button state
+    function updateGetOfferButton() {
+        let allValid = true;
+        
+        requiredFields.forEach(field => {
+            const element = document.getElementById(field);
+            if (element && !element.value.trim()) {
+                allValid = false;
+            }
+            
+            if (field === 'mileage' && (element.value < 0 || element.value > 1000000)) {
+                allValid = false;
+            }
+        });
+        
+        getOfferBtn.disabled = !allValid;
+    }
 
+    // Retrieve vehicle basic info from localStorage/sessionStorage
+    function getStoredVehicleData() {
+        let vehicleData = null;
 
+        if (sessionStorage.getItem('vehicleBasicInfo')) {
+            vehicleData = JSON.parse(sessionStorage.getItem('vehicleBasicInfo'));
+        } else if (localStorage.getItem('vehicleOfferData')) {
+            vehicleData = JSON.parse(localStorage.getItem('vehicleOfferData'));
+        }
+
+        return vehicleData || {};
+    }
+
+    function saveVehicleToFirebase() {
+        let userId = 'anonymous';
+        let userEmail = 'anonymous@example.com';
+
+        // Get stored data from index.html
+        const basicData = getStoredVehicleData();
+
+        AuthManager.checkAuthState().then((isAuthenticated) => {
+            if (isAuthenticated && AuthManager.auth.currentUser) {
+                const user = AuthManager.auth.currentUser;
+                userId = user.uid;
+                userEmail = user.email;
+            } else {
+                if (!sessionStorage.getItem('anonymousUserId')) {
+                    sessionStorage.setItem('anonymousUserId', 'anon_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9));
+                }
+                userId = sessionStorage.getItem('anonymousUserId');
+            }
+
+            // Merge stored basic info with offer.html form data
+            const formData = {
+                ...basicData,  // includes year, make, model, email, location, contactNumber
+                userId: userId,
+                userEmail: userEmail,
+                mileage: document.getElementById('mileage').value,
+                titleStatus: document.getElementById('title-status').value,
+                engineCondition: document.getElementById('engine-condition').value,
+                interiorCondition: document.getElementById('interior-condition').value,
+                tireCondition: document.getElementById('tire-condition').value,
+                bodyDamage: getCheckedDamage('front-bumper', 'rear-bumper', 'hood', 'roof', 
+                                            'door', 'fender', 'quarter-panel', 'windshield',
+                                            'side-windows', 'rear-window', 'paint', 'rust', 'dents'),
+                majorDamage: getCheckedDamage('accident', 'flood', 'fire'),
+                missingParts: getCheckedDamage('engine', 'transmission', 'wheels', 'battery', 
+                                             'catalytic', 'seats', 'steering', 'airbags', 
+                                             'radio', 'mirrors', 'lights', 'doors', 'hood-missing', 'trunk'),
+                submissionDate: new Date().toISOString(),
+                status: 'submitted',
+                isAnonymous: !isAuthenticated
+            };
+
+            // Save everything to Firestore
+            firebase.firestore().collection("vehicleSubmissions").add(formData)
+                .then((docRef) => {
+                    console.log("Vehicle data saved with ID: ", docRef.id);
+                    if (!isAuthenticated) {
+                        sessionStorage.setItem('lastSubmissionId', docRef.id);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error saving vehicle data: ", error);
+                });
+        });
+    }
+
+    // FIX 4: Add the missing helper function
+    function getCheckedDamageDescriptions(...ids) {
+        const damageItems = [];
+        ids.forEach(id => {
+            const checkbox = document.getElementById(id);
+            if (checkbox && checkbox.checked) {
+                damageItems.push(checkbox.nextElementSibling?.textContent || id);
+            }
+        });
+        return damageItems;
+    }
+
+   function sendVehicleDataEmail() {
+    // Get stored basic vehicle data
+    const basicData = getStoredVehicleData();
+    
+    // Get current form data
+    const formData = {
+        // Basic vehicle info
+        year: basicData.year || 'Not provided',
+        make: basicData.make || 'Not provided',
+        model: basicData.model || 'Not provided',
+        name: basicData.name || 'Not provided', // ADD THIS LINE
+        email: basicData.email || 'Not provided',
+        location: basicData.location || 'Not provided',
+        contactNumber: basicData.contactNumber || 'Not provided',
+        
+        // Vehicle condition info
+        mileage: document.getElementById('mileage').value,
+        titleStatus: document.getElementById('title-status').value,
+        engineCondition: document.getElementById('engine-condition').value,
+        interiorCondition: document.getElementById('interior-condition').value,
+        tireCondition: document.getElementById('tire-condition').value,
+        
+        // Damage information
+        bodyDamage: getCheckedDamageDescriptions('front-bumper', 'rear-bumper', 'hood', 'roof', 
+                                               'door', 'fender', 'quarter-panel', 'windshield',
+                                               'side-windows', 'rear-window', 'paint', 'rust', 'dents'),
+        majorDamage: getCheckedDamageDescriptions('accident', 'flood', 'fire'),
+        missingParts: getCheckedDamageDescriptions('engine', 'transmission', 'wheels', 'battery', 
+                                                 'catalytic', 'seats', 'steering', 'airbags', 
+                                                 'radio', 'mirrors', 'lights', 'doors', 'hood-missing', 'trunk'),
+        
+        submissionDate: new Date().toLocaleString(),
+        userEmail: basicData.email || 'anonymous@example.com'
+    };
+
+    // Prepare email template parameters
+    const templateParams = {
+        to_email: 'junkifidev@gmail.com', // Your email address
+        from_name: 'JUNKIFI Website',
+        subject: `New Vehicle Submission - ${formData.year} ${formData.make} ${formData.model}`,
+        
+        // Email content - these match your template variables
+        year: formData.year,
+        make: formData.make,
+        model: formData.model,
+        name: formData.name, // ADD THIS LINE
+        user_email: formData.email,
+        location: formData.location,
+        contact_number: formData.contactNumber,
+        mileage: formData.mileage,
+        title_status: formData.titleStatus,
+        engine_condition: formData.engineCondition,
+        interior_condition: formData.interiorCondition,
+        tire_condition: formData.tireCondition,
+        body_damage: formData.bodyDamage.length > 0 ? formData.bodyDamage.join(', ') : 'None',
+        major_damage: formData.majorDamage.length > 0 ? formData.majorDamage.join(', ') : 'None',
+        missing_parts: formData.missingParts.length > 0 ? formData.missingParts.join(', ') : 'None',
+        submission_date: formData.submissionDate
+    };
+
+    // Send email using EmailJS
+    emailjs.send('service_ivm6r1h', 'template_vjzq9dw', templateParams)
+        .then(function(response) {
+            console.log('Email sent successfully!', response.status, response.text);
+            // Optional: Show success message to user
+            alert('Your vehicle information has been submitted successfully! We will contact you soon.');
+        }, function(error) {
+            console.error('Failed to send email:', error);
+            // Optional: Show error message to user
+            alert('There was an issue submitting your information. Please try again or contact us directly.');
+        });
+}
+
+    // Helper function to get checked damage items
+    function getCheckedDamage(...ids) {
+        const damageItems = [];
+        ids.forEach(id => {
+            const checkbox = document.getElementById(id);
+            if (checkbox && checkbox.checked) {
+                damageItems.push({
+                    part: id,
+                    description: checkbox.nextElementSibling?.textContent || id
+                });
+            }
+        });
+        return damageItems;
+    }
+    
+    // Initialize button state
+    updateGetOfferButton();
 </script>
+    
 
 </body>
 </html>
