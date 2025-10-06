@@ -1,5 +1,19 @@
 RewriteEngine On
 
+# IMPORTANT: Add these NEW rules at the TOP, before your existing rules
+
+# Exclude sitemap.xml from rewrite rules and force correct content-type
+RewriteRule ^sitemap\.xml$ - [L]
+<Files "sitemap.xml">
+    Header set Content-Type "application/xml"
+</Files>
+
+# Force correct content-type for XML files
+<FilesMatch "\.xml$">
+    Header set Content-Type "application/xml"
+</FilesMatch>
+
+# Your existing rules below - KEEP THESE AS THEY ARE
 # Allow extensionless URLs to serve .html files
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.html -f
