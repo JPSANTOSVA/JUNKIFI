@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ - Junkifi</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="offer.css">
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+
+  <script src="auth-manager.js"></script>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f7f7f7;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    .faq-container {
+      max-width: 900px;
+      margin: 100px auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 40px;
+    }
+
+    .faq-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .faq-header h1 {
+      color: #333;
+      font-size: 2rem;
+    }
+
+    .faq-item {
+      margin-bottom: 25px;
+    }
+
+    .faq-question {
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+      color: #1a1a1a;
+    }
+
+    .faq-answer {
+      color: #555;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 600px) {
+      .faq-container {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div id="header-placeholder"></div>
+
+  <!-- FAQ Content -->
+  <div class="faq-container">
+    <div class="faq-header">
+      <h1>Frequently Asked Questions</h1>
+      <p>Got questions? We've got answers. Learn how Junkifi makes selling your car fast, easy, and hassle-free — from getting an instant offer to free towing and same-day payment.</p>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Can I sell my car today?</div>
+      <div class="faq-answer">In many cases, yes. We can often schedule same-day pickup and pay you on the spot. For the fastest service, call us at (855) 294-0940.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Where does Junkifi buy cars?</div>
+      <div class="faq-answer">We buy cars across the U.S. — no matter your location, we’ll help you sell quickly and easily.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Can I sell my car without a title?</div>
+      <div class="faq-answer">In many states, yes. Give us a call or submit your offer form, and we’ll help based on your vehicle and location.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Does Junkifi buy wrecked cars?</div>
+      <div class="faq-answer">Yes! We buy cars in all conditions — wrecked, damaged, or non-running. Tell us about your car, and we’ll make you an offer.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Is towing my vehicle free with Junkifi?</div>
+      <div class="faq-answer">Absolutely. We cover all pickup and towing fees — no hidden costs.</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div id="footer-placeholder"></div>
+
+  <!-- Load Header and Footer -->
+  <script>
+
+
+    // Load header
+    fetch("header.html")
+      .then(res => res.text())
+      .then(data => {
+        const headerPlaceholder = document.getElementById("header-placeholder");
+        headerPlaceholder.innerHTML = data;
+
+        const scripts = headerPlaceholder.querySelectorAll("script");
+        scripts.forEach(oldScript => {
+          const newScript = document.createElement("script");
+          if (oldScript.src) {
+            newScript.src = oldScript.src;
+          } else {
+            newScript.textContent = oldScript.textContent;
+          }
+          document.body.appendChild(newScript);
+        });
+      });
+
+    // Load footer
+    fetch("footer.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("footer-placeholder").innerHTML = data;
+      });
+  </script>
+
+  <!-- ✅ SEO: FAQ Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can I sell my car today?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "In many cases, yes. We can often schedule same-day pickup and pay you on the spot. For the fastest service, call us at (855) 294-0940."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where does Junkifi buy cars?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "We buy cars across the U.S. — no matter your location, we’ll help you sell quickly and easily."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I sell my car without a title?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "In many states, yes. Give us a call or submit your offer form, and we’ll help based on your vehicle and location."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does Junkifi buy wrecked cars?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes! We buy cars in all conditions — wrecked, damaged, or non-running. Tell us about your car, and we’ll make you an offer."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is towing my vehicle free with Junkifi?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Absolutely. We cover all pickup and towing fees — no hidden costs."
+        }
+      }
+    ]
+  }
+  </script>
+</body>
+</html>
